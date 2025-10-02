@@ -33,6 +33,19 @@ class CountTokensRequestTest extends TestCase
         self::assertInstanceOf(CountTokensRequest::class, $request);
     }
 
+    public function testConstructorWithEnumModelName(): void
+    {
+        $request = new CountTokensRequest(
+            ModelName::GEMINI_PRO,
+            [
+                new Content([], Role::User),
+                new Content([], Role::Model),
+            ],
+        );
+
+        self::assertInstanceOf(CountTokensRequest::class, $request);
+    }
+
     public function testConstructorWithInvalidContents(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -48,6 +61,12 @@ class CountTokensRequestTest extends TestCase
     }
 
     public function testGetOperation(): void
+    {
+        $request = new CountTokensRequest(ModelName::GEMINI_PRO, []);
+        self::assertEquals('models/gemini-pro:countTokens', $request->getOperation());
+    }
+
+    public function testGetOperationWithEnumModelName(): void
     {
         $request = new CountTokensRequest(ModelName::GEMINI_PRO, []);
         self::assertEquals('models/gemini-pro:countTokens', $request->getOperation());
@@ -72,6 +91,19 @@ class CountTokensRequestTest extends TestCase
         self::assertEquals($expected, $request->getHttpPayload());
     }
 
+    public function testGetHttpPayloadWithEnumModelName(): void
+    {
+        $request = new CountTokensRequest(
+            ModelName::GEMINI_PRO,
+            [
+                new Content([new TextPart('This is a text')], Role::User),
+            ],
+        );
+
+        $expected = '{"model":"models\/gemini-pro","contents":[{"parts":[{"text":"This is a text"}],"role":"user"}]}';
+        self::assertEquals($expected, $request->getHttpPayload());
+    }
+
     public function testJsonSerialize(): void
     {
         $request = new CountTokensRequest(
@@ -82,7 +114,25 @@ class CountTokensRequestTest extends TestCase
         );
 
         $expected = [
-            'model' => 'models/gemini-pro',
+            'model'    => 'models/gemini-pro',
+            'contents' => [
+                new Content([new TextPart('This is a text')], Role::User),
+            ],
+        ];
+        self::assertEquals($expected, $request->jsonSerialize());
+    }
+
+    public function testJsonSerializeWithEnumModelName(): void
+    {
+        $request = new CountTokensRequest(
+            ModelName::GEMINI_PRO,
+            [
+                new Content([new TextPart('This is a text')], Role::User),
+            ],
+        );
+
+        $expected = [
+            'model'    => 'models/gemini-pro',
             'contents' => [
                 new Content([new TextPart('This is a text')], Role::User),
             ],
@@ -103,6 +153,22 @@ class CountTokensRequestTest extends TestCase
         );
 
         $expected = '{"model":"models\/gemini-pro","contents":[{"parts":[{"text":"This is a text"}],"role":"user"}]}';
-        self::assertEquals($expected, (string) $request);
+        self::assertEquals($expected, (string)$request);
+    }
+
+    public function test__toStringWithEnumModelName(): void
+    {
+        $request = new CountTokensRequest(
+            ModelName::GEMINI_PRO,
+            [
+                new Content(
+                    [new TextPart('This is a text')],
+                    Role::User,
+                )
+            ],
+        );
+
+        $expected = '{"model":"models\/gemini-pro","contents":[{"parts":[{"text":"This is a text"}],"role":"user"}]}';
+        self::assertEquals($expected, (string)$request);
     }
 }

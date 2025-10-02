@@ -12,8 +12,20 @@ use GeminiAPI\Resources\Parts\ImagePart;
 use GeminiAPI\Resources\Parts\PartInterface;
 use GeminiAPI\Resources\Parts\TextPart;
 
-class Content
+class Content implements \JsonSerializable
 {
+    public function jsonSerialize(): array
+    {
+        return [
+            'parts' => $this->parts,
+            'role' => $this->role,
+        ];
+    }
+
+    public function __toString(): string
+    {
+        return json_encode($this) ?: '';
+    }
     use ArrayTypeValidator;
 
     public array $parts;

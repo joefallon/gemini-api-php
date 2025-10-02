@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace GeminiAPI;
 
 use BadMethodCallException;
-use CurlHandle;
 use GeminiAPI\ClientInterface as GeminiClientInterface;
-use GeminiAPI\Enums\ModelName;
 use GeminiAPI\Json\ObjectListParser;
 use GeminiAPI\Requests\CountTokensRequest;
 use GeminiAPI\Requests\EmbedContentRequest;
@@ -15,6 +13,7 @@ use GeminiAPI\Requests\GenerateContentRequest;
 use GeminiAPI\Requests\GenerateContentStreamRequest;
 use GeminiAPI\Requests\ListModelsRequest;
 use GeminiAPI\Requests\RequestInterface;
+use GeminiAPI\Resources\ModelName;
 use GeminiAPI\Responses\CountTokensResponse;
 use GeminiAPI\Responses\EmbedContentResponse;
 use GeminiAPI\Responses\GenerateContentResponse;
@@ -69,32 +68,32 @@ class Client implements GeminiClientInterface
 
     public function geminiPro(): GenerativeModel
     {
-        return $this->generativeModel(ModelName::GeminiPro);
+        return $this->generativeModel(ModelName::GEMINI_PRO);
     }
 
     public function geminiProVision(): GenerativeModel
     {
-        return $this->generativeModel(ModelName::GeminiProVision);
+        return $this->generativeModel(ModelName::GEMINI_1_5_PRO_LATEST);
     }
 
     public function geminiPro10(): GenerativeModel
     {
-        return $this->generativeModel(ModelName::GeminiPro10);
+        return $this->generativeModel(ModelName::GEMINI_1_0_PRO);
     }
 
     public function geminiPro10Latest(): GenerativeModel
     {
-        return $this->generativeModel(ModelName::GeminiPro10Latest);
+        return $this->generativeModel(ModelName::GEMINI_1_0_PRO_LATEST);
     }
 
     public function geminiPro15(): GenerativeModel
     {
-        return $this->generativeModel(ModelName::GeminiPro15);
+        return $this->generativeModel(ModelName::GEMINI_1_5_PRO);
     }
 
-    public function geminiProFlash1_5(): GenerativeModel
+    public function geminiFlash1_5(): GenerativeModel
     {
-        return $this->generativeModel(ModelName::GeminiPro15Flash);
+        return $this->generativeModel(ModelName::GEMINI_1_5_FLASH);
     }
 
 
@@ -142,7 +141,7 @@ class Client implements GeminiClientInterface
     public function generateContentStream(
         GenerateContentStreamRequest $request,
         callable                     $callback,
-        ?CurlHandle                  $curl = null
+                          $curl = null
     ): void {
         if(!extension_loaded('curl'))
         {

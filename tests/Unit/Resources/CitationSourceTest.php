@@ -55,4 +55,16 @@ class CitationSourceTest extends TestCase
         ];
         self::assertEquals($expected, $citationSource->jsonSerialize());
     }
+
+    public function test__toString()
+    {
+        $citationSource = new CitationSource(
+            1,
+            49,
+            'test-uri',
+            'test-license',
+        );
+        $expected = '{"startIndex":1,"endIndex":49,"uri":"test-uri","license":"test-license"}';
+        self::assertEquals($expected, (string) $citationSource);
+    }
 }

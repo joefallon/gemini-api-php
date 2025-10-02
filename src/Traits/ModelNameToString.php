@@ -13,6 +13,13 @@ trait ModelNameToString
      */
     private function modelNameToString($modelName): string
     {
-        return is_string($modelName) ? "models/$modelName" : $modelName->value;
-    }
+                        if ($this->modelName instanceof ModelName) {
+                            return $this->modelName->value;
+                        }
+        
+                        if (str_starts_with($this->modelName, 'models/')) {
+                            return $this->modelName;
+                        }
+        
+                        return 'models/' . $this->modelName;    }
 }

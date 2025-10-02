@@ -6,6 +6,7 @@ namespace GeminiAPI\Tests\Unit\Requests;
 
 use BadMethodCallException;
 use GeminiAPI\Enums\TaskType;
+use GeminiAPI\Enums\TaskType as TaskTypeEnum;
 use GeminiAPI\Requests\EmbedContentRequest;
 use GeminiAPI\Resources\Content;
 use GeminiAPI\Resources\ModelName;
@@ -22,12 +23,31 @@ class EmbedContentRequestTest extends TestCase
         self::assertInstanceOf(EmbedContentRequest::class, $request);
     }
 
+    public function testConstructorWithEnumModelName(): void
+    {
+        $request = new EmbedContentRequest(
+            ModelName::EMBEDDING_001,
+            Content::text('this is a test'),
+        );
+        self::assertInstanceOf(EmbedContentRequest::class, $request);
+    }
+
     public function testConstructorWithTaskType(): void
     {
         $request = new EmbedContentRequest(
             ModelName::EMBEDDING_001,
             Content::text('this is a test'),
             TaskType::RETRIEVAL_DOCUMENT,
+        );
+        self::assertInstanceOf(EmbedContentRequest::class, $request);
+    }
+
+    public function testConstructorWithEnumTaskType(): void
+    {
+        $request = new EmbedContentRequest(
+            ModelName::EMBEDDING_001,
+            Content::text('this is a test'),
+            TaskTypeEnum::RETRIEVAL_DOCUMENT,
         );
         self::assertInstanceOf(EmbedContentRequest::class, $request);
     }
@@ -65,6 +85,15 @@ class EmbedContentRequestTest extends TestCase
         self::assertEquals('{"content":{"parts":[{"text":"this is a test"}],"role":"user"}}', $request->getHttpPayload());
     }
 
+    public function testGetHttpPayloadWithEnumModelName(): void
+    {
+        $request = new EmbedContentRequest(
+            ModelName::EMBEDDING_001,
+            Content::text('this is a test'),
+        );
+        self::assertEquals('{"content":{"parts":[{"text":"this is a test"}],"role":"user"}}', $request->getHttpPayload());
+    }
+
     public function testGetHttpMethod(): void
     {
         $request = new EmbedContentRequest(
@@ -75,6 +104,15 @@ class EmbedContentRequestTest extends TestCase
     }
 
     public function testGetOperation(): void
+    {
+        $request = new EmbedContentRequest(
+            ModelName::EMBEDDING_001,
+            Content::text('this is a test'),
+        );
+        self::assertEquals('models/embedding-001:embedContent', $request->getOperation());
+    }
+
+    public function testGetOperationWithEnumModelName(): void
     {
         $request = new EmbedContentRequest(
             ModelName::EMBEDDING_001,
@@ -99,7 +137,32 @@ class EmbedContentRequestTest extends TestCase
         self::assertEquals($expected, $request->jsonSerialize());
     }
 
+    public function testJsonSerializeWithEnumModelName(): void
+    {
+        $request = new EmbedContentRequest(
+            ModelName::EMBEDDING_001,
+            $content = Content::text('this is a test'),
+            TaskType::RETRIEVAL_DOCUMENT,
+            'this is a title',
+        );
+        $expected = [
+            'content' => $content,
+            'taskType' => TaskType::RETRIEVAL_DOCUMENT,
+            'title' => 'this is a title',
+        ];
+        self::assertEquals($expected, $request->jsonSerialize());
+    }
+
     public function test__toString(): void
+    {
+        $request = new EmbedContentRequest(
+            ModelName::EMBEDDING_001,
+            Content::text('this is a test'),
+        );
+        self::assertEquals('{"content":{"parts":[{"text":"this is a test"}],"role":"user"}}', (string) $request);
+    }
+
+    public function test__toStringWithEnumModelName(): void
     {
         $request = new EmbedContentRequest(
             ModelName::EMBEDDING_001,

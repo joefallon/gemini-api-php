@@ -64,4 +64,33 @@ class CitationMetadataTest extends TestCase
         ]);
         self::assertInstanceOf(CitationMetadata::class, $citationMetadata);
     }
+
+    public function testJsonSerialize()
+    {
+        $citationMetadata = new CitationMetadata(
+            [
+                new CitationSource(null, null, null, null),
+                new CitationSource(null, null, null, null),
+            ],
+        );
+        $expected = [
+            'citationSources' => [
+                new CitationSource(null, null, null, null),
+                new CitationSource(null, null, null, null),
+            ],
+        ];
+        self::assertEquals($expected, $citationMetadata->jsonSerialize());
+    }
+
+    public function test__toString()
+    {
+        $citationMetadata = new CitationMetadata(
+            [
+                new CitationSource(null, null, null, null),
+                new CitationSource(null, null, null, null),
+            ],
+        );
+        $expected = '{"citationSources":[{"startIndex":null,"endIndex":null,"uri":null,"license":null},{"startIndex":null,"endIndex":null,"uri":null,"license":null}]}';
+        self::assertEquals($expected, (string) $citationMetadata);
+    }
 }

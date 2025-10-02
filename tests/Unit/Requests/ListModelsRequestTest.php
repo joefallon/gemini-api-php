@@ -26,4 +26,16 @@ class ListModelsRequestTest extends TestCase
         $request = new ListModelsRequest();
         self::assertEmpty($request->getHttpPayload());
     }
+
+    public function testJsonSerialize(): void
+    {
+        $request = new ListModelsRequest();
+        self::assertEquals([], $request->jsonSerialize());
+    }
+
+    public function test__toString(): void
+    {
+        $request = new ListModelsRequest();
+        self::assertEquals('', (string) $request);
+    }
 }

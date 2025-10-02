@@ -55,6 +55,16 @@ class CitationSource implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return array_filter(get_object_vars($this), static fn($v) => !is_null($v));
+        return [
+            'startIndex' => $this->startIndex,
+            'endIndex' => $this->endIndex,
+            'uri' => $this->uri,
+            'license' => $this->license,
+        ];
+    }
+
+    public function __toString(): string
+    {
+        return json_encode($this) ?: '';
     }
 }

@@ -9,8 +9,24 @@ use GeminiAPI\Enums\Role;
 use GeminiAPI\Traits\ArrayTypeValidator;
 use UnexpectedValueException;
 
-class Candidate
+class Candidate implements \JsonSerializable
 {
+    public function jsonSerialize(): array
+    {
+        return [
+            'content' => $this->content,
+            'finishReason' => $this->finishReason,
+            'citationMetadata' => $this->citationMetadata,
+            'safetyRatings' => $this->safetyRatings,
+            'tokenCount' => $this->tokenCount,
+            'index' => $this->index,
+        ];
+    }
+
+    public function __toString(): string
+    {
+        return json_encode($this) ?: '';
+    }
     use ArrayTypeValidator;
 
     public Content          $content;

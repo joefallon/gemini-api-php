@@ -65,4 +65,20 @@ class ContentEmbeddingTest extends TestCase
             'values' => [0.0, 1.0, '2.0'],
         ]);
     }
+
+    public function testJsonSerialize()
+    {
+        $embedding = new ContentEmbedding([0.0, 1.0]);
+        $expected = [
+            'values' => [0.0, 1.0],
+        ];
+        self::assertEquals($expected, $embedding->jsonSerialize());
+    }
+
+    public function test__toString()
+    {
+        $embedding = new ContentEmbedding([0.0, 1.0]);
+        $expected = '{"values":[0,1]}';
+        self::assertEquals($expected, (string) $embedding);
+    }
 }

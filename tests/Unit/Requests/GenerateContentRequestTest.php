@@ -8,6 +8,9 @@ use GeminiAPI\Enums\HarmBlockThreshold;
 use GeminiAPI\Enums\HarmCategory;
 use GeminiAPI\Enums\HarmProbability;
 use GeminiAPI\Enums\Role;
+use GeminiAPI\Enums\HarmCategory as HarmCategoryEnum;
+use GeminiAPI\Enums\HarmBlockThreshold as HarmBlockThresholdEnum;
+use GeminiAPI\Enums\Role as RoleEnum;
 use GeminiAPI\GenerationConfig;
 use GeminiAPI\Requests\GenerateContentRequest;
 use GeminiAPI\Resources\Content;
@@ -31,6 +34,17 @@ class GenerateContentRequestTest extends TestCase
         self::assertInstanceOf(GenerateContentRequest::class, $request);
     }
 
+    public function testConstructorWithEnumModelName(): void
+    {
+        $request = new GenerateContentRequest(
+            ModelName::GEMINI_PRO,
+            [],
+            [],
+            null,
+        );
+        self::assertInstanceOf(GenerateContentRequest::class, $request);
+    }
+
     public function testConstructorWithContents(): void
     {
         $request = new GenerateContentRequest(
@@ -40,6 +54,26 @@ class GenerateContentRequestTest extends TestCase
                 new Content([], Role::Model),
             ],
             [],
+            null,
+        );
+        self::assertInstanceOf(GenerateContentRequest::class, $request);
+    }
+
+    public function testConstructorWithEnumSafetySettings(): void
+    {
+        $request = new GenerateContentRequest(
+            ModelName::GEMINI_PRO,
+            [],
+            [
+                new SafetySetting(
+                    HarmCategoryEnum::HARM_CATEGORY_HATE_SPEECH,
+                    HarmBlockThresholdEnum::BLOCK_LOW_AND_ABOVE,
+                ),
+                new SafetySetting(
+                    HarmCategoryEnum::HARM_CATEGORY_MEDICAL,
+                    HarmBlockThresholdEnum::BLOCK_MEDIUM_AND_ABOVE,
+                ),
+            ],
             null,
         );
         self::assertInstanceOf(GenerateContentRequest::class, $request);
@@ -119,6 +153,12 @@ class GenerateContentRequestTest extends TestCase
         self::assertEquals('models/gemini-pro:generateContent', $request->getOperation());
     }
 
+    public function testGetOperationWithEnumModelName(): void
+    {
+        $request = new GenerateContentRequest(ModelName::GEMINI_PRO, []);
+        self::assertEquals('models/gemini-pro:generateContent', $request->getOperation());
+    }
+
     public function testGetHttpMethod(): void
     {
         $request = new GenerateContentRequest(ModelName::GEMINI_PRO, []);
@@ -131,6 +171,18 @@ class GenerateContentRequestTest extends TestCase
             ModelName::GEMINI_PRO,
             [
                 new Content([new TextPart('This is a text')], Role::User),
+            ],
+        );
+        $expected = '{"model":"models\/gemini-pro","contents":[{"parts":[{"text":"This is a text"}],"role":"user"}]}';
+        self::assertEquals($expected, $request->getHttpPayload());
+    }
+
+    public function testGetHttpPayloadWithEnumModelName(): void
+    {
+        $request = new GenerateContentRequest(
+            ModelName::GEMINI_PRO,
+            [
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         );
         $expected = '{"model":"models\/gemini-pro","contents":[{"parts":[{"text":"This is a text"}],"role":"user"}]}';
@@ -155,6 +207,24 @@ class GenerateContentRequestTest extends TestCase
         self::assertEquals($expected, $request->jsonSerialize());
     }
 
+    public function testJsonSerializeWithEnumModelName(): void
+    {
+        $request = new GenerateContentRequest(
+            ModelName::GEMINI_PRO,
+            [
+                new Content([new TextPart('This is a text')], RoleEnum::User),
+            ],
+        );
+
+        $expected = [
+            'model' => 'models/gemini-pro',
+            'contents' => [
+                new Content([new TextPart('This is a text')], RoleEnum::User),
+            ],
+        ];
+        self::assertEquals($expected, $request->jsonSerialize());
+    }
+
     public function test__toString(): void
     {
         $request = new GenerateContentRequest(
@@ -163,6 +233,22 @@ class GenerateContentRequestTest extends TestCase
                 new Content(
                     [new TextPart('This is a text')],
                     Role::User,
+                )
+            ],
+        );
+
+        $expected = '{"model":"models\/gemini-pro","contents":[{"parts":[{"text":"This is a text"}],"role":"user"}]}';
+        self::assertEquals($expected, (string) $request);
+    }
+
+    public function test__toStringWithEnumModelName(): void
+    {
+        $request = new GenerateContentRequest(
+            ModelName::GEMINI_PRO,
+            [
+                new Content(
+                    [new TextPart('This is a text')],
+                    RoleEnum::User,
                 )
             ],
         );

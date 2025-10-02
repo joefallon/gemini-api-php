@@ -9,8 +9,19 @@ use InvalidArgumentException;
 
 use function is_array;
 
-class ContentEmbedding
+class ContentEmbedding implements \JsonSerializable
 {
+    public function jsonSerialize(): array
+    {
+        return [
+            'values' => $this->values,
+        ];
+    }
+
+    public function __toString(): string
+    {
+        return json_encode($this) ?: '';
+    }
     use ArrayTypeValidator;
 
     public array $values;

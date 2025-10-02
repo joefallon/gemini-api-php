@@ -6,8 +6,19 @@ namespace GeminiAPI\Resources;
 
 use GeminiAPI\Traits\ArrayTypeValidator;
 
-class CitationMetadata
+class CitationMetadata implements \JsonSerializable
 {
+    public function jsonSerialize(): array
+    {
+        return [
+            'citationSources' => $this->citationSources,
+        ];
+    }
+
+    public function __toString(): string
+    {
+        return json_encode($this) ?: '';
+    }
     use ArrayTypeValidator;
 
     public array $citationSources;
