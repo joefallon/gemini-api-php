@@ -8,12 +8,21 @@ use JsonSerializable;
 
 class CitationSource implements JsonSerializable
 {
+    public ?int    $startIndex;
+    public ?int    $endIndex;
+    public ?string $uri;
+    public ?string $license;
+
     public function __construct(
-        public readonly ?int $startIndex,
-        public readonly ?int $endIndex,
-        public readonly ?string $uri,
-        public readonly ?string $license,
+        ?int    $startIndex,
+        ?int    $endIndex,
+        ?string $uri,
+        ?string $license
     ) {
+        $this->startIndex = $startIndex;
+        $this->endIndex = $endIndex;
+        $this->uri = $uri;
+        $this->license = $license;
     }
 
     /**
@@ -23,6 +32,7 @@ class CitationSource implements JsonSerializable
      *     uri?: string|null,
      *     license?: string|null,
      * } $source
+     *
      * @return self
      */
     public static function fromArray(array $source): self
@@ -45,6 +55,6 @@ class CitationSource implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return array_filter(get_object_vars($this), static fn ($v) => !is_null($v));
+        return array_filter(get_object_vars($this), static fn($v) => !is_null($v));
     }
 }

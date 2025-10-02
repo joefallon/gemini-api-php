@@ -12,10 +12,17 @@ use function json_encode;
 
 class SafetySetting implements JsonSerializable
 {
+    /** @var string */
+    public $category;
+    /** @var string */
+    public $threshold;
+
     public function __construct(
-        public readonly HarmCategory $category,
-        public readonly HarmBlockThreshold $threshold,
+        string $category,
+        string $threshold
     ) {
+        $this->category = $category;
+        $this->threshold = $threshold;
     }
 
     /**

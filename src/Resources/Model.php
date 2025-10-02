@@ -8,6 +8,17 @@ use JsonSerializable;
 
 class Model implements JsonSerializable
 {
+    public string $name;
+    public string $version;
+    public string $displayName;
+    public string $description;
+    public int $inputTokenLimit;
+    public int $outputTokenLimit;
+    public array $supportedGenerationMethods;
+    public ?float $temperature;
+    public ?float $topP;
+    public ?int $topK;
+
     /**
      * @param string $name
      * @param string $version
@@ -21,17 +32,27 @@ class Model implements JsonSerializable
      * @param int|null $topK
      */
     public function __construct(
-        public readonly string $name,
-        public readonly string $version,
-        public readonly string $displayName,
-        public readonly string $description,
-        public readonly int $inputTokenLimit,
-        public readonly int $outputTokenLimit,
-        public readonly array $supportedGenerationMethods,
-        public readonly ?float $temperature,
-        public readonly ?float $topP,
-        public readonly ?int $topK,
+        string $name,
+        string $version,
+        string $displayName,
+        string $description,
+        int $inputTokenLimit,
+        int $outputTokenLimit,
+        array $supportedGenerationMethods,
+        ?float $temperature,
+        ?float $topP,
+        ?int $topK
     ) {
+        $this->name = $name;
+        $this->version = $version;
+        $this->displayName = $displayName;
+        $this->description = $description;
+        $this->inputTokenLimit = $inputTokenLimit;
+        $this->outputTokenLimit = $outputTokenLimit;
+        $this->supportedGenerationMethods = $supportedGenerationMethods;
+        $this->temperature = $temperature;
+        $this->topP = $topP;
+        $this->topK = $topK;
     }
 
     /**

@@ -20,7 +20,7 @@ class ChatSession
     private array $history;
 
     public function __construct(
-        private readonly GenerativeModel $model,
+        private GenerativeModel $model,
     ) {
     }
 
@@ -32,12 +32,13 @@ class ChatSession
         $this->history[] = new Content($parts, Role::User);
 
         $config = (new GenerationConfig())
-        ->withCandidateCount(1);
+            ->withCandidateCount(1);
         $response = $this->model
             ->withGenerationConfig($config)
             ->generateContentWithContents($this->history);
 
-        if (!empty($response->candidates)) {
+        if(!empty($response->candidates))
+        {
             $parts = $response->candidates[0]->content->parts;
             $this->history[] = new Content($parts, Role::Model);
         }
@@ -47,18 +48,20 @@ class ChatSession
 
     /**
      * @param callable(GenerateContentResponse): void $callback
-     * @param PartInterface ...$parts
+     * @param PartInterface                           ...$parts
+     *
      * @return void
      */
     public function sendMessageStream(
-        callable $callback,
+        callable      $callback,
         PartInterface ...$parts,
     ): void {
         $this->history[] = new Content($parts, Role::User);
 
         $parts = [];
         $partsCollectorCallback = function (GenerateContentResponse $response) use ($callback, &$parts) {
-            if (!empty($response->candidates)) {
+            if(!empty($response->candidates))
+            {
                 array_push($parts, ...$response->parts());
             }
 
@@ -71,7 +74,8 @@ class ChatSession
             ->withGenerationConfig($config)
             ->generateContentStreamWithContents($partsCollectorCallback, $this->history);
 
-        if (!empty($parts)) {
+        if(!empty($parts))
+        {
             $this->history[] = new Content($parts, Role::Model);
         }
     }
@@ -86,6 +90,7 @@ class ChatSession
 
     /**
      * @param Content[] $history
+     *
      * @return $this
      * @throws InvalidArgumentException
      */

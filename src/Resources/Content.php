@@ -16,14 +16,20 @@ class Content
 {
     use ArrayTypeValidator;
 
+    public array $parts;
+    /** @var string */
+    public $role;
+
     /**
      * @param PartInterface[] $parts
-     * @param Role $role
+     * @param Role            $role
      */
     public function __construct(
-        public array $parts,
-        public readonly Role $role,
+        array $parts,
+        string  $role
     ) {
+        $this->parts = $parts;
+        $this->role = $role;
         $this->ensureArrayOfType($parts, PartInterface::class);
     }
 
@@ -34,7 +40,7 @@ class Content
         return $this;
     }
 
-    public function addImage(MimeType $mimeType, string $image): self
+    public function addImage(string $mimeType, string $image): self
     {
         $this->parts[] = new ImagePart($mimeType, $image);
 
@@ -50,7 +56,7 @@ class Content
 
     public static function text(
         string $text,
-        Role $role = Role::User,
+        string $role = Role::User
     ): self {
         return new self(
             [
@@ -61,9 +67,9 @@ class Content
     }
 
     public static function image(
-        MimeType $mimeType,
-        string $image,
-        Role $role = Role::User
+        string $mimeType,
+        string   $image,
+        string   $role = Role::User
     ): self {
         return new self(
             [
@@ -73,10 +79,9 @@ class Content
         );
     }
 
-    public static function file(
-        MimeType $mimeType,
-        string $file,
-        Role $role = Role::User
+        public static function file(
+            string   $mimeType,        string   $file,
+        string   $role = Role::User
     ): self {
         return new self(
             [
@@ -87,10 +92,10 @@ class Content
     }
 
     public static function textAndImage(
-        string $text,
-        MimeType $mimeType,
-        string $image,
-        Role $role = Role::User,
+        string   $text,
+        string $mimeType,
+        string   $image,
+        string   $role = Role::User
     ): self {
         return new self(
             [
@@ -102,10 +107,10 @@ class Content
     }
 
     public static function textAndFile(
-        string $text,
-        MimeType $mimeType,
-        string $file,
-        Role $role = Role::User,
+        string   $text,
+        string $mimeType,
+        string   $file,
+        string   $role = Role::User
     ): self {
         return new self(
             [
@@ -121,17 +126,21 @@ class Content
      *     parts: array<int, array{text?: string, inlineData?: array{mimeType: string, data: string}}>,
      *     role: string,
      * } $content
+     *
      * @return self
      */
     public static function fromArray(array $content): self
     {
         $parts = [];
-        foreach ($content['parts'] as $part) {
-            if (!empty($part['text'])) {
+        foreach($content['parts'] as $part)
+        {
+            if(!empty($part['text']))
+            {
                 $parts[] = new TextPart($part['text']);
             }
 
-            if (!empty($part['inlineData'])) {
+            if(!empty($part['inlineData']))
+            {
                 $mimeType = MimeType::from($part['inlineData']['mimeType']);
                 $parts[] = new FilePart($mimeType, $part['inlineData']['data']);
             }

@@ -27,8 +27,16 @@ interface ClientInterface
     public function countTokens(CountTokensRequest $request): CountTokensResponse;
     public function generateContent(GenerateContentRequest $request): GenerateContentResponse;
     public function embedContent(EmbedContentRequest $request): EmbedContentResponse;
-    public function generativeModel(ModelName|string $modelName): GenerativeModel;
-    public function embeddingModel(ModelName|string $modelName): EmbeddingModel;
+    /**
+     * @param ModelName|string $modelName
+     * @return GenerativeModel
+     */
+    public function generativeModel($modelName): GenerativeModel;
+    /**
+     * @param ModelName|string $modelName
+     * @return EmbeddingModel
+     */
+    public function embeddingModel($modelName): EmbeddingModel;
     public function listModels(): ListModelsResponse;
     public function withBaseUrl(string $baseUrl): self;
 
@@ -41,6 +49,6 @@ interface ClientInterface
     public function generateContentStream(
         GenerateContentStreamRequest $request,
         callable $callback,
-        ?CurlHandle $curl = null,
+        ?CurlHandle $curl = null
     ): void;
 }

@@ -28,10 +28,20 @@ class GenerativeModel
 
     private ?Content $systemInstruction = null;
 
+    private Client $client;
+    /** @var ModelName|string */
+    public $modelName;
+
+    /**
+     * @param Client $client
+     * @param ModelName|string $modelName
+     */
     public function __construct(
-        private readonly Client $client,
-        public readonly ModelName|string $modelName,
+        Client $client,
+        $modelName
     ) {
+        $this->client = $client;
+        $this->modelName = $modelName;
     }
 
     /**
@@ -72,7 +82,7 @@ class GenerativeModel
     public function generateContentStream(
         callable $callback,
         array $parts,
-        ?CurlHandle $ch = null,
+        $ch = null
     ): void {
         $this->ensureArrayOfType($parts, PartInterface::class);
 
@@ -90,7 +100,7 @@ class GenerativeModel
     public function generateContentStreamWithContents(
         callable $callback,
         array $contents,
-        ?CurlHandle $ch = null,
+        $ch = null
     ): void {
         $this->ensureArrayOfType($contents, Content::class);
 

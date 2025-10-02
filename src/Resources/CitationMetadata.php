@@ -10,25 +10,30 @@ class CitationMetadata
 {
     use ArrayTypeValidator;
 
+    public array $citationSources;
+
     /**
      * @param CitationSource[] $citationSources
      */
     public function __construct(
-        public readonly array $citationSources = [],
+        array $citationSources = []
     ) {
+        $this->citationSources = $citationSources;
         $this->ensureArrayOfType($citationSources, CitationSource::class);
     }
 
     /**
      * @param array{
-     *  citationSources: array<int, array{startIndex?: int|null, endIndex?: int|null, uri?: string|null, license?: string|null}>,
+     *  citationSources: array<int, array{startIndex?: int|null, endIndex?: int|null, uri?: string|null,
+     *     license?: string|null}>,
      * } $array
+     *
      * @return self
      */
     public static function fromArray(array $array): self
     {
         $citationSources = array_map(
-            static fn (array $source): CitationSource => CitationSource::fromArray($source),
+            static fn(array $source): CitationSource => CitationSource::fromArray($source),
             $array['citationSources'] ?? [],
         );
 

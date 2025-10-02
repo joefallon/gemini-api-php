@@ -11,10 +11,15 @@ use function json_encode;
 
 class FilePart implements PartInterface, JsonSerializable
 {
+    public string $mimeType;
+    public string   $data;
+
     public function __construct(
-        public readonly MimeType $mimeType,
-        public readonly string $data,
+        string $mimeType,
+        string   $data
     ) {
+        $this->mimeType = $mimeType;
+        $this->data = $data;
     }
 
     /**
@@ -29,8 +34,8 @@ class FilePart implements PartInterface, JsonSerializable
     {
         return [
             'inlineData' => [
-                'mimeType' => $this->mimeType->value,
-                'data' => $this->data,
+                'mimeType' => $this->mimeType,
+                'data'     => $this->data,
             ],
         ];
     }

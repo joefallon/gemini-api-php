@@ -4,23 +4,71 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Enums;
 
-enum MimeType: string
+use InvalidArgumentException;
+
+use function sprintf;
+
+class MimeType
 {
-    case FILE_PDF = 'application/pdf'; // Will not rename to APPLICATION_PDF to keep the backwards compatibility
-    case APPLICATION_JAVASCRIPT = 'application/x-javascript';
-    case APPLICATION_PYTHON = 'application/x-python';
+    // Will not rename to APPLICATION_PDF to keep the backwards compatibility
+    public const FILE_PDF               = 'application/pdf';
+    public const APPLICATION_JAVASCRIPT = 'application/x-javascript';
+    public const APPLICATION_PYTHON     = 'application/x-python';
 
-    case TEXT_PLAIN = 'text/plain';
-    case TEXT_HTML = 'text/html';
-    case TEXT_CSS = 'text/css';
-    case TEXT_MARKDOWN = 'text/md';
-    case TEXT_CSV = 'text/csv';
-    case TEXT_XML = 'text/xml';
-    case TEXT_RTF = 'text/rtf';
+    public const TEXT_PLAIN    = 'text/plain';
+    public const TEXT_HTML     = 'text/html';
+    public const TEXT_CSS      = 'text/css';
+    public const TEXT_MARKDOWN = 'text/md';
+    public const TEXT_CSV      = 'text/csv';
+    public const TEXT_XML      = 'text/xml';
+    public const TEXT_RTF      = 'text/rtf';
 
-    case IMAGE_PNG = 'image/png';
-    case IMAGE_JPEG = 'image/jpeg';
-    case IMAGE_HEIC = 'image/heic';
-    case IMAGE_HEIF = 'image/heif';
-    case IMAGE_WEBP = 'image/webp';
+    public const IMAGE_PNG  = 'image/png';
+    public const IMAGE_JPEG = 'image/jpeg';
+    public const IMAGE_HEIC = 'image/heic';
+    public const IMAGE_HEIF = 'image/heif';
+    public const IMAGE_WEBP = 'image/webp';
+
+    private function __construct()
+    {
+    }
+
+    public static function from(string $value): string
+    {
+        switch($value)
+        {
+            case self::FILE_PDF:
+                return self::FILE_PDF;
+            case self::APPLICATION_JAVASCRIPT:
+                return self::APPLICATION_JAVASCRIPT;
+            case self::APPLICATION_PYTHON:
+                return self::APPLICATION_PYTHON;
+            case self::TEXT_PLAIN:
+                return self::TEXT_PLAIN;
+            case self::TEXT_HTML:
+                return self::TEXT_HTML;
+            case self::TEXT_CSS:
+                return self::TEXT_CSS;
+            case self::TEXT_MARKDOWN:
+                return self::TEXT_MARKDOWN;
+            case self::TEXT_CSV:
+                return self::TEXT_CSV;
+            case self::TEXT_XML:
+                return self::TEXT_XML;
+            case self::TEXT_RTF:
+                return self::TEXT_RTF;
+            case self::IMAGE_PNG:
+                return self::IMAGE_PNG;
+            case self::IMAGE_JPEG:
+                return self::IMAGE_JPEG;
+            case self::IMAGE_HEIC:
+                return self::IMAGE_HEIC;
+            case self::IMAGE_HEIF:
+                return self::IMAGE_HEIF;
+            case self::IMAGE_WEBP:
+                return self::IMAGE_WEBP;
+            default:
+                throw new InvalidArgumentException(sprintf('Invalid MimeType value: %s', $value));
+        }
+    }
 }

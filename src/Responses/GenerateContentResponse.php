@@ -15,14 +15,19 @@ class GenerateContentResponse
 {
     use ArrayTypeValidator;
 
+    public array           $candidates;
+    public ?PromptFeedback $promptFeedback;
+
     /**
-     * @param Candidate[] $candidates
+     * @param Candidate[]     $candidates
      * @param ?PromptFeedback $promptFeedback
      */
     public function __construct(
-        public readonly array $candidates,
-        public readonly ?PromptFeedback $promptFeedback = null,
+        array           $candidates,
+        ?PromptFeedback $promptFeedback = null
     ) {
+        $this->candidates = $candidates;
+        $this->promptFeedback = $promptFeedback;
         $this->ensureArrayOfType($candidates, Candidate::class);
     }
 
@@ -31,18 +36,20 @@ class GenerateContentResponse
      */
     public function parts(): array
     {
-        if (empty($this->candidates)) {
+        if(empty($this->candidates))
+        {
             throw new ValueError(
-                'The `GenerateContentResponse::parts()` quick accessor '.
-                'only works for a single candidate, but none were returned. '.
+                'The `GenerateContentResponse::parts()` quick accessor ' .
+                'only works for a single candidate, but none were returned. ' .
                 'Check the `GenerateContentResponse::$promptFeedback` to see if the prompt was blocked.'
             );
         }
 
-        if (count($this->candidates) > 1) {
+        if(count($this->candidates) > 1)
+        {
             throw new ValueError(
-                'The `GenerateContentResponse::parts()` quick accessor '.
-                'only works with a single candidate. '.
+                'The `GenerateContentResponse::parts()` quick accessor ' .
+                'only works with a single candidate. ' .
                 'With multiple candidates use GenerateContentResponse.candidates[index].text'
             );
         }
@@ -54,12 +61,13 @@ class GenerateContentResponse
     {
         $parts = $this->parts();
 
-        if (count($parts) > 1 || !$parts[0] instanceof TextPart) {
+        if(count($parts) > 1 || !$parts[0] instanceof TextPart)
+        {
             throw new ValueError(
-                'The `GenerateContentResponse::text()` quick accessor '.
-                'only works for simple (single-`Part`) text responses. '.
-                'This response contains multiple `Parts`. '.
-                'Use the `GenerateContentResponse::parts()` accessor '.
+                'The `GenerateContentResponse::text()` quick accessor ' .
+                'only works for simple (single-`Part`) text responses. ' .
+                'This response contains multiple `Parts`. ' .
+                'Use the `GenerateContentResponse::parts()` accessor ' .
                 'or the full `GenerateContentResponse.candidates[index].content.parts` lookup instead'
             );
         }
@@ -74,25 +82,26 @@ class GenerateContentResponse
      *   safetyRatings?: array<int, array{category: string, probability: string, blocked: bool|null}>,
      *  },
      *  candidates: array<int, array{
-     *   citationMetadata: array{citationSources: array<int, array{startIndex?: int|null, endIndex?: int|null, uri?: string|null, license?: string|null}>},
-     *   safetyRatings: array<int, array{category: string, probability: string, blocked: bool|null}>,
-     *   content: array{parts: array<int, array{text: string, inlineData: array{mimeType: string, data: string}}>, role: string},
-     *   finishReason: string,
-     *   tokenCount: int,
-     *   index: int
+     *   citationMetadata: array{citationSources: array<int, array{startIndex?: int|null, endIndex?:
+     *     int|null, uri?: string|null, license?: string|null}>}, safetyRatings: array<int, array{category:
+     *     string, probability: string, blocked: bool|null}>, content: array{parts: array<int, array{text:
+     *     string, inlineData: array{mimeType: string, data: string}}>, role: string}, finishReason: string,
+     *     tokenCount: int, index: int
      *  }>,
      * } $array
+     *
      * @return self
      */
     public static function fromArray(array $array): self
     {
         $promptFeedback = null;
-        if (!empty($array['promptFeedback'])) {
+        if(!empty($array['promptFeedback']))
+        {
             $promptFeedback = PromptFeedback::fromArray($array['promptFeedback']);
         }
 
         $candidates = array_map(
-            static fn (array $candidate): Candidate => Candidate::fromArray($candidate),
+            static fn(array $candidate): Candidate => Candidate::fromArray($candidate),
             $array['candidates'] ?? [],
         );
 

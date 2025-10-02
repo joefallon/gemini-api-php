@@ -8,10 +8,15 @@ use UnexpectedValueException;
 
 class CountTokensResponse
 {
+    public int $totalTokens;
+
     public function __construct(
-        public readonly int $totalTokens,
+        int $totalTokens
     ) {
-        if ($totalTokens < 0) {
+        $this->totalTokens = $totalTokens;
+
+        if($totalTokens < 0)
+        {
             throw new UnexpectedValueException('totalTokens cannot be negative');
         }
     }
@@ -20,6 +25,7 @@ class CountTokensResponse
      * @param array{
      *     totalTokens: int,
      * } $array
+     *
      * @return self
      */
     public static function fromArray(array $array): self

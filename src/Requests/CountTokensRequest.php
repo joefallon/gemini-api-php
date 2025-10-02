@@ -17,14 +17,22 @@ class CountTokensRequest implements JsonSerializable, RequestInterface
     use ArrayTypeValidator;
     use ModelNameToString;
 
+    /** @var ModelName|string */
+    public $modelName;
+    /** @var Content[] */
+    public array $contents;
+
     /**
      * @param ModelName|string $modelName
-     * @param Content[] $contents
+     * @param Content[]        $contents
      */
     public function __construct(
-        public readonly ModelName|string $modelName,
-        public readonly array $contents,
+        $modelName,
+        array $contents
     ) {
+        $this->modelName = $modelName;
+        $this->contents = $contents;
+
         $this->ensureArrayOfType($this->contents, Content::class);
     }
 
@@ -40,7 +48,7 @@ class CountTokensRequest implements JsonSerializable, RequestInterface
 
     public function getHttpPayload(): string
     {
-        return (string) $this;
+        return (string)$this;
     }
 
     /**
@@ -52,7 +60,7 @@ class CountTokensRequest implements JsonSerializable, RequestInterface
     public function jsonSerialize(): array
     {
         return [
-            'model' => $this->modelNameToString($this->modelName),
+            'model'    => $this->modelNameToString($this->modelName),
             'contents' => $this->contents,
         ];
     }

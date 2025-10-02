@@ -15,12 +15,22 @@ use Psr\Http\Client\ClientExceptionInterface;
 
 class EmbeddingModel
 {
-    private ?TaskType $taskType = null;
+    private ?string $taskType = null;
 
+    private Client $client;
+    /** @var ModelName|string */
+    public $modelName;
+
+    /**
+     * @param Client $client
+     * @param ModelName|string $modelName
+     */
     public function __construct(
-        private readonly Client $client,
-        public readonly ModelName|string $modelName,
+        Client $client,
+        $modelName
     ) {
+        $this->client = $client;
+        $this->modelName = $modelName;
     }
 
     /**
@@ -55,7 +65,7 @@ class EmbeddingModel
         return $this->client->embedContent($request);
     }
 
-    public function withTaskType(TaskType $taskType): self
+    public function withTaskType(string $taskType): self
     {
         $clone = clone $this;
         $clone->taskType = $taskType;

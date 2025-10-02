@@ -47,12 +47,21 @@ class Client implements GeminiClientInterface
      */
     private array $requestHeaders = [];
 
+    private ?HttpClientInterface     $client         = null;
+    private ?RequestFactoryInterface $requestFactory = null;
+    private ?StreamFactoryInterface  $streamFactory  = null;
+
     public function __construct(
-        private readonly string  $apiKey,
-        private ?HttpClientInterface $client = null,
-        private ?RequestFactoryInterface $requestFactory = null,
-        private ?StreamFactoryInterface $streamFactory = null,
+        string                   $apiKey,
+        ?HttpClientInterface     $client = null,
+        ?RequestFactoryInterface $requestFactory = null,
+        ?StreamFactoryInterface  $streamFactory = null
     ) {
+        $this->apiKey = $apiKey;
+        $this->client = $client;
+        $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
+
         $this->client ??= Psr18ClientDiscovery::find();
         $this->requestFactory ??= Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory ??= Psr17FactoryDiscovery::findStreamFactory();
@@ -72,6 +81,7 @@ class Client implements GeminiClientInterface
     {
         return $this->generativeModel(ModelName::GeminiPro10);
     }
+
     public function geminiPro10Latest(): GenerativeModel
     {
         return $this->generativeModel(ModelName::GeminiPro10Latest);
@@ -88,7 +98,10 @@ class Client implements GeminiClientInterface
     }
 
 
-    public function generativeModel(ModelName|string $modelName): GenerativeModel
+    /**
+     * @param ModelName|string $modelName
+     */
+    public function generativeModel($modelName): GenerativeModel
     {
         return new GenerativeModel(
             $this,
@@ -96,7 +109,10 @@ class Client implements GeminiClientInterface
         );
     }
 
-    public function embeddingModel(ModelName|string $modelName): EmbeddingModel
+    /**
+     * @param ModelName|string $modelName
+     */
+    public function embeddingModel($modelName): EmbeddingModel
     {
         return new EmbeddingModel(
             $this,
@@ -110,56 +126,66 @@ class Client implements GeminiClientInterface
     public function generateContent(GenerateContentRequest $request): GenerateContentResponse
     {
         $response = $this->doRequest($request);
-        $json = json_decode($response, associative: true);
+        $json = json_decode($response, true);
 
         return GenerateContentResponse::fromArray($json);
     }
 
     /**
-     * @param GenerateContentStreamRequest $request
+     * @param GenerateContentStreamRequest            $request
      * @param callable(GenerateContentResponse): void $callback
-     * @param CurlHandle|null $curl
+     * @param CurlHandle|null                         $curl
+     *
      * @throws BadMethodCallException
      * @throws RuntimeException
      */
     public function generateContentStream(
         GenerateContentStreamRequest $request,
-        callable $callback,
-        ?CurlHandle $curl = null,
+        callable                     $callback,
+        ?CurlHandle                  $curl = null
     ): void {
-        if (!extension_loaded('curl')) {
+        if(!extension_loaded('curl'))
+        {
             throw new BadMethodCallException('Gemini API requires `curl` extension for streaming responses');
         }
 
         $parser = new ObjectListParser(
-            /* @phpstan-ignore-next-line */
-            static fn (array $arr) => $callback(GenerateContentResponse::fromArray($arr)),
+        /* @phpstan-ignore-next-line */
+            static fn(array $arr) => $callback(GenerateContentResponse::fromArray($arr))
         );
 
         $writeFunction = static function (CurlHandle $ch, string $str) use ($request, $parser): int {
             $responseCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 
-            return $responseCode === 200
-                ? $parser->consume($str)
-                : throw new RuntimeException(
+            if($responseCode === 200)
+            {
+                return $parser->consume($str);
+            }
+            else
+            {
+                throw new RuntimeException(
                     sprintf(
                         'Gemini API operation failed: operation=%s, status_code=%d, response=%s',
                         $request->getOperation(),
                         $responseCode,
-                        $str,
-                    ),
+                        $str
+                    )
                 );
+            }
         };
 
         $ch = $curl ?? curl_init();
 
-        if ($ch === false) {
+        if($ch === false)
+        {
             throw new RuntimeException('Gemini API cannot initialize streaming content request');
         }
 
         $headerLines = [];
-        foreach ($this->getRequestHeaders() as $name => $values) {
-            foreach ((array) $values as $value) {
+        foreach($this->getRequestHeaders() as $name => $values)
+        {
+            foreach((array)$values as $value)
+            {
                 $headerLines[] = "{$name}: {$value}";
             }
         }
@@ -179,7 +205,7 @@ class Client implements GeminiClientInterface
     public function embedContent(EmbedContentRequest $request): EmbedContentResponse
     {
         $response = $this->doRequest($request);
-        $json = json_decode($response, associative: true);
+        $json = json_decode($response, true);
 
         return EmbedContentResponse::fromArray($json);
     }
@@ -190,7 +216,7 @@ class Client implements GeminiClientInterface
     public function countTokens(CountTokensRequest $request): CountTokensResponse
     {
         $response = $this->doRequest($request);
-        $json = json_decode($response, associative: true);
+        $json = json_decode($response, true);
 
         return CountTokensResponse::fromArray($json);
     }
@@ -202,7 +228,7 @@ class Client implements GeminiClientInterface
     {
         $request = new ListModelsRequest();
         $response = $this->doRequest($request);
-        $json = json_decode($response, associative: true);
+        $json = json_decode($response, true);
 
         return ListModelsResponse::fromArray($json);
     }
@@ -230,6 +256,7 @@ class Client implements GeminiClientInterface
 
     /**
      * @param array<string, string|string[]> $headers
+     *
      * @return self
      */
     public function withRequestHeaders(array $headers): self
@@ -237,7 +264,8 @@ class Client implements GeminiClientInterface
         $clone = clone $this;
         $clone->requestHeaders = [];
 
-        foreach ($headers as $name => $value) {
+        foreach($headers as $name => $value)
+        {
             $clone->requestHeaders[strtolower($name)] = $value;
         }
 
@@ -250,9 +278,9 @@ class Client implements GeminiClientInterface
     private function getRequestHeaders(): array
     {
         return $this->requestHeaders + [
-            'content-type' => 'application/json',
-            self::API_KEY_HEADER_NAME => $this->apiKey,
-        ];
+                'content-type'            => 'application/json',
+                self::API_KEY_HEADER_NAME => $this->apiKey,
+            ];
     }
 
     private function getRequestUrl(RequestInterface $request): string
@@ -261,7 +289,7 @@ class Client implements GeminiClientInterface
             '%s/%s/%s',
             $this->baseUrl,
             $this->version,
-            $request->getOperation(),
+            $request->getOperation()
         );
     }
 
@@ -270,39 +298,43 @@ class Client implements GeminiClientInterface
      */
     private function doRequest(RequestInterface $request): string
     {
-        if (!isset($this->client, $this->requestFactory, $this->streamFactory)) {
+        if(!isset($this->client, $this->requestFactory, $this->streamFactory))
+        {
             throw new RuntimeException('Missing client or factory for Gemini API operation');
         }
 
         $httpRequest = $this->requestFactory
             ->createRequest(
                 $request->getHttpMethod(),
-                $this->getRequestUrl($request),
+                $this->getRequestUrl($request)
             );
 
-        foreach ($this->getRequestHeaders() as $name => $value) {
+        foreach($this->getRequestHeaders() as $name => $value)
+        {
             $httpRequest = $httpRequest->withAddedHeader($name, $value);
         }
 
         $payload = $request->getHttpPayload();
-        if (!empty($payload)) {
+        if(!empty($payload))
+        {
             $stream = $this->streamFactory->createStream($payload);
             $httpRequest = $httpRequest->withBody($stream);
         }
 
         $response = $this->client->sendRequest($httpRequest);
 
-        if ($response->getStatusCode() !== 200) {
+        if($response->getStatusCode() !== 200)
+        {
             throw new RuntimeException(
                 sprintf(
                     'Gemini API operation failed: operation=%s, status_code=%d,  response=%s',
                     $request->getOperation(),
                     $response->getStatusCode(),
-                    $response->getBody(),
-                ),
+                    $response->getBody()
+                )
             );
         }
 
-        return (string) $response->getBody();
+        return (string)$response->getBody();
     }
 }

@@ -10,11 +10,18 @@ use JsonSerializable;
 
 class SafetyRating implements JsonSerializable
 {
+    public string $category;
+    public string $probability;
+    public ?bool           $blocked;
+
     public function __construct(
-        public readonly HarmCategory $category,
-        public readonly HarmProbability $probability,
-        public readonly ?bool $blocked,
+        string $category,
+        string $probability,
+        ?bool           $blocked
     ) {
+        $this->category = $category;
+        $this->probability = $probability;
+        $this->blocked = $blocked;
     }
 
     /**
@@ -23,6 +30,7 @@ class SafetyRating implements JsonSerializable
      *     probability: string,
      *     blocked?: bool|null,
      * } $array
+     *
      * @return self
      */
     public static function fromArray(array $array): self
@@ -40,11 +48,12 @@ class SafetyRating implements JsonSerializable
     public function jsonSerialize(): array
     {
         $arr = [
-            'category' => $this->category->value,
+            'category'    => $this->category->value,
             'probability' => $this->probability->value,
         ];
 
-        if ($this->blocked !== null) {
+        if($this->blocked !== null)
+        {
             $arr['blocked'] = $this->blocked;
         }
 

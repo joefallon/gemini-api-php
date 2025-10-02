@@ -8,15 +8,19 @@ use GeminiAPI\Resources\ContentEmbedding;
 
 class EmbedContentResponse
 {
+    public ContentEmbedding $embedding;
+
     public function __construct(
-        public readonly ContentEmbedding $embedding,
+        ContentEmbedding $embedding
     ) {
+        $this->embedding = $embedding;
     }
 
     /**
      * @param array{
      *     embedding: array{values: float[]}
      * } $array
+     *
      * @return self
      */
     public static function fromArray(array $array): self

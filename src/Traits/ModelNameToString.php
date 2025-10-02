@@ -6,7 +6,12 @@ use GeminiAPI\Enums\ModelName;
 
 trait ModelNameToString
 {
-    private function modelNameToString(ModelName|string $modelName): string
+    /**
+     * @param ModelName|string $modelName
+     *
+     * @return string
+     */
+    private function modelNameToString($modelName): string
     {
         return is_string($modelName) ? "models/$modelName" : $modelName->value;
     }

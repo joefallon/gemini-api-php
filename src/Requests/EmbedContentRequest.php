@@ -17,13 +17,31 @@ class EmbedContentRequest implements JsonSerializable, RequestInterface
 {
     use ModelNameToString;
 
+    /** @var ModelName|string */
+    public           $modelName;
+    public Content   $content;
+    public ?string $taskType;
+    public ?string   $title;
+
+    /**
+     * @param ModelName|string $modelName
+     * @param Content          $content
+     * @param TaskType|null    $taskType
+     * @param string|null      $title
+     */
     public function __construct(
-        public readonly ModelName|string $modelName,
-        public readonly Content $content,
-        public readonly ?TaskType $taskType = null,
-        public readonly ?string $title = null,
+        $modelName,
+        Content $content,
+        ?string $taskType = null,
+        ?string $title = null
     ) {
-        if (isset($this->title) && $this->taskType !== TaskType::RETRIEVAL_DOCUMENT) {
+        $this->modelName = $modelName;
+        $this->content = $content;
+        $this->taskType = $taskType;
+        $this->title = $title;
+
+        if(isset($this->title) && $this->taskType !== TaskType::RETRIEVAL_DOCUMENT)
+        {
             throw new BadMethodCallException('Title is only applicable when TaskType is RETRIEVAL_DOCUMENT');
         }
     }
@@ -40,7 +58,7 @@ class EmbedContentRequest implements JsonSerializable, RequestInterface
 
     public function getHttpPayload(): string
     {
-        return (string) $this;
+        return (string)$this;
     }
 
     /**
@@ -56,11 +74,13 @@ class EmbedContentRequest implements JsonSerializable, RequestInterface
             'content' => $this->content,
         ];
 
-        if (isset($this->taskType)) {
+        if(isset($this->taskType))
+        {
             $arr['taskType'] = $this->taskType;
         }
 
-        if (isset($this->title)) {
+        if(isset($this->title))
+        {
             $arr['title'] = $this->title;
         }
 

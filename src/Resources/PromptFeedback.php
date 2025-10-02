@@ -12,14 +12,19 @@ class PromptFeedback implements JsonSerializable
 {
     use ArrayTypeValidator;
 
+    public ?BlockReason $blockReason;
+    public array        $safetyRatings;
+
     /**
-     * @param ?BlockReason $blockReason
+     * @param ?BlockReason   $blockReason
      * @param SafetyRating[] $safetyRatings
      */
     public function __construct(
-        public readonly ?BlockReason $blockReason,
-        public readonly array $safetyRatings,
+        ?BlockReason $blockReason,
+        array        $safetyRatings
     ) {
+        $this->blockReason = $blockReason;
+        $this->safetyRatings = $safetyRatings;
         $this->ensureArrayOfType($safetyRatings, SafetyRating::class);
     }
 
@@ -28,13 +33,17 @@ class PromptFeedback implements JsonSerializable
      *     blockReason: string|null,
      *     safetyRatings?: array<int, array{category: string, probability: string, blocked?: bool|null}>
      * } $array
+     *
      * @return self
      */
     public static function fromArray(array $array): self
     {
-        $blockReason = BlockReason::tryFrom($array['blockReason'] ?? '');
+        $blockReason = null;
+        if (isset($array['blockReason']) && $array['blockReason'] !== '') {
+            $blockReason = BlockReason::from($array['blockReason']);
+        }
         $safetyRatings = array_map(
-            static fn (array $rating): SafetyRating => SafetyRating::fromArray($rating),
+            static fn(array $rating): SafetyRating => SafetyRating::fromArray($rating),
             $array['safetyRatings'] ?? [],
         );
 
@@ -48,11 +57,13 @@ class PromptFeedback implements JsonSerializable
     {
         $arr = [];
 
-        if ($this->blockReason) {
+        if($this->blockReason)
+        {
             $arr['blockReason'] = $this->blockReason->value;
         }
 
-        if (!empty($this->safetyRatings)) {
+        if(!empty($this->safetyRatings))
+        {
             $arr['safetyRatings'] = $this->safetyRatings;
         }
 

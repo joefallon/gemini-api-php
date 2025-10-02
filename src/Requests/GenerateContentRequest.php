@@ -19,20 +19,35 @@ class GenerateContentRequest implements JsonSerializable, RequestInterface
     use ArrayTypeValidator;
     use ModelNameToString;
 
+    /** @var ModelName|string */
+    public $modelName;
+    /** @var Content[] */
+    public array $contents;
+    /** @var SafetySetting[] */
+    public array             $safetySettings;
+    public ?GenerationConfig $generationConfig;
+    public ?Content          $systemInstruction;
+
     /**
-     * @param ModelName|string $modelName
-     * @param Content[] $contents
-     * @param SafetySetting[] $safetySettings
+     * @param ModelName|string      $modelName
+     * @param Content[]             $contents
+     * @param SafetySetting[]       $safetySettings
      * @param GenerationConfig|null $generationConfig
-     * @param ?Content $systemInstruction
+     * @param ?Content              $systemInstruction
      */
     public function __construct(
-        public readonly ModelName|string $modelName,
-        public readonly array $contents,
-        public readonly array $safetySettings = [],
-        public readonly ?GenerationConfig $generationConfig = null,
-        public readonly ?Content $systemInstruction = null,
+        $modelName,
+        array $contents,
+        array $safetySettings = [],
+        ?GenerationConfig $generationConfig = null,
+        ?Content $systemInstruction = null
     ) {
+        $this->modelName = $modelName;
+        $this->contents = $contents;
+        $this->safetySettings = $safetySettings;
+        $this->generationConfig = $generationConfig;
+        $this->systemInstruction = $systemInstruction;
+
         $this->ensureArrayOfType($this->contents, Content::class);
         $this->ensureArrayOfType($this->safetySettings, SafetySetting::class);
     }
@@ -49,7 +64,7 @@ class GenerateContentRequest implements JsonSerializable, RequestInterface
 
     public function getHttpPayload(): string
     {
-        return (string) $this;
+        return (string)$this;
     }
 
     /**
@@ -64,19 +79,22 @@ class GenerateContentRequest implements JsonSerializable, RequestInterface
     public function jsonSerialize(): array
     {
         $arr = [
-            'model' => $this->modelNameToString($this->modelName),
+            'model'    => $this->modelNameToString($this->modelName),
             'contents' => $this->contents,
         ];
 
-        if (!empty($this->safetySettings)) {
+        if(!empty($this->safetySettings))
+        {
             $arr['safetySettings'] = $this->safetySettings;
         }
 
-        if ($this->generationConfig) {
+        if($this->generationConfig)
+        {
             $arr['generationConfig'] = $this->generationConfig;
         }
 
-        if ($this->systemInstruction) {
+        if($this->systemInstruction)
+        {
             $arr['systemInstruction'] = $this->systemInstruction;
         }
 

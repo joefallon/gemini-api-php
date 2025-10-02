@@ -8,12 +8,15 @@ use GeminiAPI\Resources\Model;
 
 class ListModelsResponse
 {
+    public array $models;
+
     /**
      * @param Model[] $models
      */
     public function __construct(
-        public readonly array $models,
+        array $models
     ) {
+        $this->models = $models;
     }
 
     /**
@@ -29,12 +32,13 @@ class ListModelsResponse
      *   topP?: float,
      *   topK?: int,
      *  }>} $json
+     *
      * @return self
      */
     public static function fromArray(array $json): self
     {
         $models = array_map(
-            static fn (array $arr): Model => Model::fromArray($arr),
+            static fn(array $arr): Model => Model::fromArray($arr),
             $json['models'],
         );
 

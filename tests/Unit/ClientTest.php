@@ -82,7 +82,9 @@ class ClientTest extends TestCase
             'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent',
         );
         $httpResponse = new Response(
-            body: <<<BODY
+            200,
+            [],
+            <<<BODY
             {
               "candidates": [
                 {
@@ -113,7 +115,7 @@ class ClientTest extends TestCase
                 ]
               }
             }
-            BODY,
+            BODY
         );
         $requestFactory = $this->createMock(RequestFactoryInterface::class);
         $requestFactory->expects(self::once())
@@ -159,7 +161,9 @@ class ClientTest extends TestCase
             'https://generativelanguage.googleapis.com/v1/models/embedding-001:embedContent',
         );
         $httpResponse = new Response(
-            body: <<<BODY
+            200,
+            [],
+            <<<BODY
             {
               "embedding": {
                 "values": [
@@ -168,7 +172,7 @@ class ClientTest extends TestCase
                 ]
               }
             }
-            BODY,
+            BODY
         );
         $requestFactory = $this->createMock(RequestFactoryInterface::class);
         $requestFactory->expects(self::once())
@@ -214,11 +218,13 @@ class ClientTest extends TestCase
             'https://generativelanguage.googleapis.com/v1/models/gemini-pro:countTokens',
         );
         $httpResponse = new Response(
-            body: <<<BODY
+            200,
+            [],
+            <<<BODY
             {
               "totalTokens": 10
             }
-            BODY,
+            BODY
         );
         $requestFactory = $this->createMock(RequestFactoryInterface::class);
         $requestFactory->expects(self::once())
@@ -264,7 +270,9 @@ class ClientTest extends TestCase
             'https://generativelanguage.googleapis.com/v1/models',
         );
         $httpResponse = new Response(
-            body: <<<BODY
+            200,
+            [],
+            <<<BODY
             {
               "models": [
                 {
@@ -299,7 +307,7 @@ class ClientTest extends TestCase
                 }
               ]
             }
-            BODY,
+            BODY
         );
         $requestFactory = $this->createMock(RequestFactoryInterface::class);
         $requestFactory->expects(self::once())

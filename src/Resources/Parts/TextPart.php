@@ -10,9 +10,11 @@ use function json_encode;
 
 class TextPart implements PartInterface, JsonSerializable
 {
-    public function __construct(
-        public readonly string $text,
-    ) {
+    public string $text;
+
+    public function __construct(string $text)
+    {
+        $this->text = $text;
     }
 
     /**
