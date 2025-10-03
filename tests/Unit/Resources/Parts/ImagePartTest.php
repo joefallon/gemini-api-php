@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Tests\Unit\Resources\Parts;
 
-use GeminiAPI\Enums\MimeType;
-use GeminiAPI\Enums\MimeType as MimeTypeEnum;
+use GeminiAPI\Enums\MimeTypeEnum;
 use GeminiAPI\Resources\Parts\ImagePart;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +12,7 @@ class ImagePartTest extends TestCase
 {
     public function testConstructor()
     {
-        $part = new ImagePart(MimeType::IMAGE_JPEG, '');
+        $part = new ImagePart(MimeTypeEnum::IMAGE_JPEG, '');
         self::assertInstanceOf(ImagePart::class, $part);
     }
 
@@ -25,7 +24,7 @@ class ImagePartTest extends TestCase
 
     public function testJsonSerialize()
     {
-        $part = new ImagePart(MimeType::IMAGE_JPEG, 'this is an image');
+        $part = new ImagePart(MimeTypeEnum::IMAGE_JPEG, 'this is an image');
         $expected = [
             'inlineData' => [
                 'mimeType' => 'image/jpeg',
@@ -49,7 +48,7 @@ class ImagePartTest extends TestCase
 
     public function test__toString()
     {
-        $part = new ImagePart(MimeType::IMAGE_JPEG, 'this is an image');
+        $part = new ImagePart(MimeTypeEnum::IMAGE_JPEG, 'this is an image');
         $expected = '{"inlineData":{"mimeType":"image\/jpeg","data":"this is an image"}}';
         self::assertEquals($expected, (string) $part);
     }

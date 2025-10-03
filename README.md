@@ -94,7 +94,7 @@ print $response->text();
 
 ```php
 use GeminiAPI\Client;
-use GeminiAPI\Enums\MimeType;
+use GeminiAPI\Enums\MimeTypeEnum;
 use GeminiAPI\Resources\ModelName;
 use GeminiAPI\Resources\Parts\ImagePart;
 use GeminiAPI\Resources\Parts\TextPart;
@@ -103,7 +103,7 @@ $client = new Client('GEMINI_API_KEY');
 $response = $client->generativeModel(ModelName::GEMINI_PRO)->generateContent(
     new TextPart('Explain what is in the image'),
     new ImagePart(
-        MimeType::IMAGE_JPEG,
+        MimeTypeEnum::IMAGE_JPEG,
         base64_encode(file_get_contents('elephpant.jpg')),
     ),
 );
@@ -156,13 +156,13 @@ This code will print "Hello World!" to the standard output.
 
 ```php
 use GeminiAPI\Client;
-use GeminiAPI\Enums\Role;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\Resources\Content;
 use GeminiAPI\Resources\ModelName;
 use GeminiAPI\Resources\Parts\TextPart;
 
 $history = [
-    Content::text('Hello World in PHP', Role::User),
+    Content::text('Hello World in PHP', RoleEnum::User),
     Content::text(
         <<<TEXT
         <?php
@@ -171,7 +171,7 @@ $history = [
         
         This code will print "Hello World!" to the standard output.
         TEXT,
-        Role::Model,
+        RoleEnum::Model,
     ),
 ];
 
@@ -231,18 +231,18 @@ $client->generativeModel(ModelName::GEMINI_PRO)->generateContentStream(
 
 ### Streaming Chat Session
 
-> Requires `curl` extension to be enabled 
+> Requires `curl` extension to be enabled
 
 ```php
 use GeminiAPI\Client;
-use GeminiAPI\Enums\Role;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\Resources\Content;
 use GeminiAPI\Resources\ModelName;
 use GeminiAPI\Resources\Parts\TextPart;
 use GeminiAPI\Responses\GenerateContentResponse;
 
 $history = [
-    Content::text('Hello World in PHP', Role::User),
+    Content::text('Hello World in PHP', RoleEnum::User),
     Content::text(
         <<<TEXT
         <?php
@@ -251,7 +251,7 @@ $history = [
         
         This code will print "Hello World!" to the standard output.
         TEXT,
-        Role::Model,
+        RoleEnum::Model,
     ),
 ];
 
@@ -373,16 +373,16 @@ print $response->totalTokens;
 
 ```php
 use GeminiAPI\Client;
-use GeminiAPI\Enums\HarmCategory;
-use GeminiAPI\Enums\HarmBlockThreshold;
+use GeminiAPI\Enums\HarmCategoryEnum;
+use GeminiAPI\Enums\HarmBlockThresholdEnum;
 use GeminiAPI\GenerationConfig;
 use GeminiAPI\Resources\ModelName;
 use GeminiAPI\Resources\Parts\TextPart;
 use GeminiAPI\SafetySetting;
 
 $safetySetting = new SafetySetting(
-    HarmCategory::HARM_CATEGORY_HATE_SPEECH,
-    HarmBlockThreshold::BLOCK_LOW_AND_ABOVE,
+    HarmCategoryEnum::HARM_CATEGORY_HATE_SPEECH,
+    HarmBlockThresholdEnum::BLOCK_LOW_AND_ABOVE,
 );
 $generationConfig = (new GenerationConfig())
     ->withCandidateCount(1)

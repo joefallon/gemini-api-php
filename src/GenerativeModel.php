@@ -6,7 +6,7 @@ namespace GeminiAPI;
 
 use CurlHandle;
 use GeminiAPI\Enums\ModelName;
-use GeminiAPI\Enums\Role;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\Requests\CountTokensRequest;
 use GeminiAPI\Requests\GenerateContentRequest;
 use GeminiAPI\Requests\GenerateContentStreamRequest;
@@ -49,7 +49,7 @@ class GenerativeModel
      */
     public function generateContent(PartInterface ...$parts): GenerateContentResponse
     {
-        $content = new Content($parts, Role::User);
+        $content = new Content($parts, RoleEnum::User);
 
         return $this->generateContentWithContents([$content]);
     }
@@ -86,7 +86,7 @@ class GenerativeModel
     ): void {
         $this->ensureArrayOfType($parts, PartInterface::class);
 
-        $content = new Content($parts, Role::User);
+        $content = new Content($parts, RoleEnum::User);
 
         $this->generateContentStreamWithContents($callback, [$content], $ch);
     }
@@ -125,7 +125,7 @@ class GenerativeModel
      */
     public function countTokens(PartInterface ...$parts): CountTokensResponse
     {
-        $content = new Content($parts, Role::User);
+        $content = new Content($parts, RoleEnum::User);
         $request = new CountTokensRequest(
             $this->modelName,
             [$content],
@@ -153,7 +153,7 @@ class GenerativeModel
     public function withSystemInstruction(string $systemInstruction): self
     {
         $clone = clone $this;
-        $clone->systemInstruction = Content::text($systemInstruction, Role::User);
+        $clone->systemInstruction = Content::text($systemInstruction, RoleEnum::User);
 
         return $clone;
     }

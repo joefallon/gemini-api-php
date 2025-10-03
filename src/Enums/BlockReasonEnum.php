@@ -8,7 +8,10 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class BlockReason
+/**
+ *
+ */
+class BlockReasonEnum
 {
     public const BLOCK_REASON_UNSPECIFIED = 'BLOCK_REASON_UNSPECIFIED';
     public const SAFETY                   = 'SAFETY';

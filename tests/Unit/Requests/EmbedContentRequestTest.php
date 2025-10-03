@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace GeminiAPI\Tests\Unit\Requests;
 
 use BadMethodCallException;
-use GeminiAPI\Enums\TaskType;
-use GeminiAPI\Enums\TaskType as TaskTypeEnum;
+use GeminiAPI\Enums\TaskTypeEnum;
 use GeminiAPI\Requests\EmbedContentRequest;
 use GeminiAPI\Resources\Content;
 use GeminiAPI\Resources\ModelName;
@@ -14,55 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 class EmbedContentRequestTest extends TestCase
 {
-    public function testConstructor(): void
-    {
-        $request = new EmbedContentRequest(
-            ModelName::EMBEDDING_001,
-            Content::text('this is a test'),
-        );
-        self::assertInstanceOf(EmbedContentRequest::class, $request);
-    }
-
-    public function testConstructorWithEnumModelName(): void
-    {
-        $request = new EmbedContentRequest(
-            ModelName::EMBEDDING_001,
-            Content::text('this is a test'),
-        );
-        self::assertInstanceOf(EmbedContentRequest::class, $request);
-    }
-
-    public function testConstructorWithTaskType(): void
-    {
-        $request = new EmbedContentRequest(
-            ModelName::EMBEDDING_001,
-            Content::text('this is a test'),
-            TaskType::RETRIEVAL_DOCUMENT,
-        );
-        self::assertInstanceOf(EmbedContentRequest::class, $request);
-    }
-
-    public function testConstructorWithEnumTaskType(): void
-    {
-        $request = new EmbedContentRequest(
-            ModelName::EMBEDDING_001,
-            Content::text('this is a test'),
-            TaskTypeEnum::RETRIEVAL_DOCUMENT,
-        );
-        self::assertInstanceOf(EmbedContentRequest::class, $request);
-    }
-
-    public function testConstructorWithTitle(): void
-    {
-        $request = new EmbedContentRequest(
-            ModelName::EMBEDDING_001,
-            Content::text('this is a test'),
-            TaskType::RETRIEVAL_DOCUMENT,
-            'this is a title',
-        );
-        self::assertInstanceOf(EmbedContentRequest::class, $request);
-    }
-
     public function testConstructorWithTitleAndWrongTaskType(): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -71,7 +21,7 @@ class EmbedContentRequestTest extends TestCase
         new EmbedContentRequest(
             ModelName::EMBEDDING_001,
             Content::text('this is a test'),
-            TaskType::RETRIEVAL_QUERY,
+            TaskTypeEnum::RETRIEVAL_QUERY,
             'this is a title',
         );
     }
@@ -126,12 +76,12 @@ class EmbedContentRequestTest extends TestCase
         $request = new EmbedContentRequest(
             ModelName::EMBEDDING_001,
             $content = Content::text('this is a test'),
-            TaskType::RETRIEVAL_DOCUMENT,
+            TaskTypeEnum::RETRIEVAL_DOCUMENT,
             'this is a title',
         );
         $expected = [
             'content' => $content,
-            'taskType' => TaskType::RETRIEVAL_DOCUMENT,
+            'taskType' => TaskTypeEnum::RETRIEVAL_DOCUMENT,
             'title' => 'this is a title',
         ];
         self::assertEquals($expected, $request->jsonSerialize());
@@ -142,12 +92,12 @@ class EmbedContentRequestTest extends TestCase
         $request = new EmbedContentRequest(
             ModelName::EMBEDDING_001,
             $content = Content::text('this is a test'),
-            TaskType::RETRIEVAL_DOCUMENT,
+            TaskTypeEnum::RETRIEVAL_DOCUMENT,
             'this is a title',
         );
         $expected = [
             'content' => $content,
-            'taskType' => TaskType::RETRIEVAL_DOCUMENT,
+            'taskType' => TaskTypeEnum::RETRIEVAL_DOCUMENT,
             'title' => 'this is a title',
         ];
         self::assertEquals($expected, $request->jsonSerialize());

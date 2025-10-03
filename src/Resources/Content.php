@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Resources;
 
-use GeminiAPI\Enums\MimeType;
-use GeminiAPI\Enums\Role;
+use GeminiAPI\Enums\MimeTypeEnum;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\Resources\Parts\FilePart;
 use GeminiAPI\Traits\ArrayTypeValidator;
 use GeminiAPI\Resources\Parts\ImagePart;
@@ -34,7 +34,7 @@ class Content implements \JsonSerializable
 
     /**
      * @param PartInterface[] $parts
-     * @param Role            $role
+     * @param RoleEnum        $role
      */
     public function __construct(
         array $parts,
@@ -59,7 +59,7 @@ class Content implements \JsonSerializable
         return $this;
     }
 
-    public function addFile(MimeType $mimeType, string $file): self
+    public function addFile(MimeTypeEnum $mimeType, string $file): self
     {
         $this->parts[] = new FilePart($mimeType, $file);
 
@@ -68,7 +68,7 @@ class Content implements \JsonSerializable
 
     public static function text(
         string $text,
-        string $role = Role::User
+        string $role = RoleEnum::User
     ): self {
         return new self(
             [
@@ -81,7 +81,7 @@ class Content implements \JsonSerializable
     public static function image(
         string $mimeType,
         string   $image,
-        string   $role = Role::User
+        string   $role = RoleEnum::User
     ): self {
         return new self(
             [
@@ -93,7 +93,7 @@ class Content implements \JsonSerializable
 
         public static function file(
             string   $mimeType,        string   $file,
-        string   $role = Role::User
+        string   $role = RoleEnum::User
     ): self {
         return new self(
             [
@@ -107,7 +107,7 @@ class Content implements \JsonSerializable
         string   $text,
         string $mimeType,
         string   $image,
-        string   $role = Role::User
+        string   $role = RoleEnum::User
     ): self {
         return new self(
             [
@@ -122,7 +122,7 @@ class Content implements \JsonSerializable
         string   $text,
         string $mimeType,
         string   $file,
-        string   $role = Role::User
+        string   $role = RoleEnum::User
     ): self {
         return new self(
             [
@@ -153,14 +153,14 @@ class Content implements \JsonSerializable
 
             if(!empty($part['inlineData']))
             {
-                $mimeType = MimeType::from($part['inlineData']['mimeType']);
+                $mimeType = MimeTypeEnum::from($part['inlineData']['mimeType']);
                 $parts[] = new FilePart($mimeType, $part['inlineData']['data']);
             }
         }
 
         return new self(
             $parts,
-            Role::from($content['role']),
+            RoleEnum::from($content['role']),
         );
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace GeminiAPI;
 
-use GeminiAPI\Enums\HarmBlockThreshold;
-use GeminiAPI\Enums\HarmCategory;
+use GeminiAPI\Enums\HarmBlockThresholdEnum;
+use GeminiAPI\Enums\HarmCategoryEnum;
 use JsonSerializable;
 
 use function json_encode;

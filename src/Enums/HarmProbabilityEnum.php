@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class HarmProbability
+class HarmProbabilityEnum
 {
     public const HARM_PROBABILITY_UNSPECIFIED = 'HARM_PROBABILITY_UNSPECIFIED';
     public const NEGLIGIBLE                   = 'NEGLIGIBLE';

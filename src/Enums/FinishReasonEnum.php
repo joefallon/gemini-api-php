@@ -8,7 +8,10 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class FinishReason
+/**
+ *
+ */
+class FinishReasonEnum
 {
     public const FINISH_REASON_UNSPECIFIED = 'FINISH_REASON_UNSPECIFIED';
     public const STOP                      = 'STOP';

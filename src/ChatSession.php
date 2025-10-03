@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace GeminiAPI;
 
-use GeminiAPI\Enums\Role;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\Resources\Content;
 use GeminiAPI\Resources\Parts\PartInterface;
 use GeminiAPI\Responses\GenerateContentResponse;
@@ -29,7 +29,7 @@ class ChatSession
      */
     public function sendMessage(PartInterface ...$parts): GenerateContentResponse
     {
-        $this->history[] = new Content($parts, Role::User);
+        $this->history[] = new Content($parts, RoleEnum::User);
 
         $config = (new GenerationConfig())
             ->withCandidateCount(1);
@@ -40,7 +40,7 @@ class ChatSession
         if(!empty($response->candidates))
         {
             $parts = $response->candidates[0]->content->parts;
-            $this->history[] = new Content($parts, Role::Model);
+            $this->history[] = new Content($parts, RoleEnum::Model);
         }
 
         return $response;
@@ -56,7 +56,7 @@ class ChatSession
         callable      $callback,
         PartInterface ...$parts,
     ): void {
-        $this->history[] = new Content($parts, Role::User);
+        $this->history[] = new Content($parts, RoleEnum::User);
 
         $parts = [];
         $partsCollectorCallback = function (GenerateContentResponse $response) use ($callback, &$parts) {
@@ -76,7 +76,7 @@ class ChatSession
 
         if(!empty($parts))
         {
-            $this->history[] = new Content($parts, Role::Model);
+            $this->history[] = new Content($parts, RoleEnum::Model);
         }
     }
 

@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class HarmCategory
+class HarmCategoryEnum
 {
     public const HARM_CATEGORY_UNSPECIFIED       = 'HARM_CATEGORY_UNSPECIFIED';
     public const HARM_CATEGORY_DEROGATORY        = 'HARM_CATEGORY_DEROGATORY';

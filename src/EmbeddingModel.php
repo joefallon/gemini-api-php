@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace GeminiAPI;
 
 use GeminiAPI\Enums\ModelName;
-use GeminiAPI\Enums\Role;
-use GeminiAPI\Enums\TaskType;
+use GeminiAPI\Enums\RoleEnum;
+use GeminiAPI\Enums\TaskTypeEnum;
 use GeminiAPI\Requests\EmbedContentRequest;
 use GeminiAPI\Resources\Content;
 use GeminiAPI\Resources\Parts\PartInterface;
@@ -40,7 +40,7 @@ class EmbeddingModel
     {
         $request = new EmbedContentRequest(
             $this->modelName,
-            new Content($parts, Role::User),
+            new Content($parts, RoleEnum::User),
             $this->taskType,
         );
 
@@ -57,8 +57,8 @@ class EmbeddingModel
     {
         $request = new EmbedContentRequest(
             $this->modelName,
-            new Content($parts, Role::User),
-            TaskType::RETRIEVAL_DOCUMENT,
+            new Content($parts, RoleEnum::User),
+            TaskTypeEnum::RETRIEVAL_DOCUMENT,
             $title,
         );
 

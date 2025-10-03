@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class TaskType
+class TaskTypeEnum
 {
     public const TASK_TYPE_UNSPECIFIED = 'TASK_TYPE_UNSPECIFIED';
     public const RETRIEVAL_QUERY       = 'RETRIEVAL_QUERY';

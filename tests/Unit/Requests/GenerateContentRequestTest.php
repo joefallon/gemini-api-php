@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Tests\Unit\Requests;
 
-use GeminiAPI\Enums\HarmBlockThreshold;
-use GeminiAPI\Enums\HarmCategory;
-use GeminiAPI\Enums\HarmProbability;
-use GeminiAPI\Enums\Role;
-use GeminiAPI\Enums\HarmCategory as HarmCategoryEnum;
-use GeminiAPI\Enums\HarmBlockThreshold as HarmBlockThresholdEnum;
-use GeminiAPI\Enums\Role as RoleEnum;
+use GeminiAPI\Enums\HarmBlockThresholdEnum;
+use GeminiAPI\Enums\HarmCategoryEnum;
+use GeminiAPI\Enums\HarmProbabilityEnum;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\GenerationConfig;
 use GeminiAPI\Requests\GenerateContentRequest;
 use GeminiAPI\Resources\Content;
@@ -50,8 +47,8 @@ class GenerateContentRequestTest extends TestCase
         $request = new GenerateContentRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([], Role::User),
-                new Content([], Role::Model),
+                new Content([], RoleEnum::User),
+                new Content([], RoleEnum::Model),
             ],
             [],
             null,
@@ -86,7 +83,7 @@ class GenerateContentRequestTest extends TestCase
         new GenerateContentRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([], Role::User),
+                new Content([], RoleEnum::User),
                 new TextPart('This is a text'),
             ],
             [],
@@ -101,12 +98,12 @@ class GenerateContentRequestTest extends TestCase
             [],
             [
                 new SafetySetting(
-                    HarmCategory::HARM_CATEGORY_HATE_SPEECH,
-                    HarmBlockThreshold::BLOCK_LOW_AND_ABOVE,
+                    HarmCategoryEnum::HARM_CATEGORY_HATE_SPEECH,
+                    HarmBlockThresholdEnum::BLOCK_LOW_AND_ABOVE,
                 ),
                 new SafetySetting(
-                    HarmCategory::HARM_CATEGORY_MEDICAL,
-                    HarmBlockThreshold::BLOCK_MEDIUM_AND_ABOVE,
+                    HarmCategoryEnum::HARM_CATEGORY_MEDICAL,
+                    HarmBlockThresholdEnum::BLOCK_MEDIUM_AND_ABOVE,
                 ),
             ],
             null,
@@ -123,12 +120,12 @@ class GenerateContentRequestTest extends TestCase
             [],
             [
                 new SafetySetting(
-                    HarmCategory::HARM_CATEGORY_UNSPECIFIED,
-                    HarmBlockThreshold::HARM_BLOCK_THRESHOLD_UNSPECIFIED,
+                    HarmCategoryEnum::HARM_CATEGORY_UNSPECIFIED,
+                    HarmBlockThresholdEnum::HARM_BLOCK_THRESHOLD_UNSPECIFIED,
                 ),
                 new SafetyRating(
-                    HarmCategory::HARM_CATEGORY_UNSPECIFIED,
-                    HarmProbability::HARM_PROBABILITY_UNSPECIFIED,
+                    HarmCategoryEnum::HARM_CATEGORY_UNSPECIFIED,
+                    HarmProbabilityEnum::HARM_PROBABILITY_UNSPECIFIED,
                     null,
                 )
             ],
@@ -170,7 +167,7 @@ class GenerateContentRequestTest extends TestCase
         $request = new GenerateContentRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([new TextPart('This is a text')], Role::User),
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         );
         $expected = '{"model":"models\/gemini-pro","contents":[{"parts":[{"text":"This is a text"}],"role":"user"}]}';
@@ -194,14 +191,14 @@ class GenerateContentRequestTest extends TestCase
         $request = new GenerateContentRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([new TextPart('This is a text')], Role::User),
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         );
 
         $expected = [
             'model' => 'models/gemini-pro',
             'contents' => [
-                new Content([new TextPart('This is a text')], Role::User),
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         ];
         self::assertEquals($expected, $request->jsonSerialize());
@@ -232,7 +229,7 @@ class GenerateContentRequestTest extends TestCase
             [
                 new Content(
                     [new TextPart('This is a text')],
-                    Role::User,
+                    RoleEnum::User,
                 )
             ],
         );

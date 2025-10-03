@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Tests\Unit\Requests;
 
-use GeminiAPI\Enums\Role;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\Requests\CountTokensRequest;
 use GeminiAPI\Resources\Content;
 use GeminiAPI\Resources\ModelName;
@@ -25,8 +25,8 @@ class CountTokensRequestTest extends TestCase
         $request = new CountTokensRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([], Role::User),
-                new Content([], Role::Model),
+                new Content([], RoleEnum::User),
+                new Content([], RoleEnum::Model),
             ],
         );
 
@@ -38,8 +38,8 @@ class CountTokensRequestTest extends TestCase
         $request = new CountTokensRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([], Role::User),
-                new Content([], Role::Model),
+                new Content([], RoleEnum::User),
+                new Content([], RoleEnum::Model),
             ],
         );
 
@@ -54,7 +54,7 @@ class CountTokensRequestTest extends TestCase
             ModelName::GEMINI_PRO,
             // @phpstan-ignore-next-line
             [
-                new Content([], Role::User),
+                new Content([], RoleEnum::User),
                 new TextPart('This is a text'),
             ],
         );
@@ -83,7 +83,7 @@ class CountTokensRequestTest extends TestCase
         $request = new CountTokensRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([new TextPart('This is a text')], Role::User),
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         );
 
@@ -96,7 +96,7 @@ class CountTokensRequestTest extends TestCase
         $request = new CountTokensRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([new TextPart('This is a text')], Role::User),
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         );
 
@@ -109,14 +109,14 @@ class CountTokensRequestTest extends TestCase
         $request = new CountTokensRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([new TextPart('This is a text')], Role::User),
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         );
 
         $expected = [
             'model'    => 'models/gemini-pro',
             'contents' => [
-                new Content([new TextPart('This is a text')], Role::User),
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         ];
         self::assertEquals($expected, $request->jsonSerialize());
@@ -127,14 +127,14 @@ class CountTokensRequestTest extends TestCase
         $request = new CountTokensRequest(
             ModelName::GEMINI_PRO,
             [
-                new Content([new TextPart('This is a text')], Role::User),
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         );
 
         $expected = [
             'model'    => 'models/gemini-pro',
             'contents' => [
-                new Content([new TextPart('This is a text')], Role::User),
+                new Content([new TextPart('This is a text')], RoleEnum::User),
             ],
         ];
         self::assertEquals($expected, $request->jsonSerialize());
@@ -147,7 +147,7 @@ class CountTokensRequestTest extends TestCase
             [
                 new Content(
                     [new TextPart('This is a text')],
-                    Role::User,
+                    RoleEnum::User,
                 )
             ],
         );
@@ -163,7 +163,7 @@ class CountTokensRequestTest extends TestCase
             [
                 new Content(
                     [new TextPart('This is a text')],
-                    Role::User,
+                    RoleEnum::User,
                 )
             ],
         );

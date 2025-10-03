@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Resources;
 
-use GeminiAPI\Enums\FinishReason;
-use GeminiAPI\Enums\Role;
+use GeminiAPI\Enums\FinishReasonEnum;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\Traits\ArrayTypeValidator;
 use UnexpectedValueException;
 
@@ -38,7 +38,7 @@ class Candidate implements \JsonSerializable
 
     /**
      * @param Content          $content
-     * @param FinishReason     $finishReason
+     * @param FinishReasonEnum $finishReason
      * @param CitationMetadata $citationMetadata
      * @param SafetyRating[]   $safetyRatings
      * @param int              $tokenCount
@@ -96,11 +96,11 @@ class Candidate implements \JsonSerializable
 
         $content = isset($candidate['content'])
             ? Content::fromArray($candidate['content'])
-            : Content::text('', Role::Model);
+            : Content::text('', RoleEnum::Model);
 
         $finishReason = isset($candidate['finishReason'])
-            ? FinishReason::from($candidate['finishReason'])
-            : FinishReason::OTHER;
+            ? FinishReasonEnum::from($candidate['finishReason'])
+            : FinishReasonEnum::OTHER;
 
         return new self(
             $content,

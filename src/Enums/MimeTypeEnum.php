@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class MimeType
+class MimeTypeEnum
 {
     // Will not rename to APPLICATION_PDF to keep the backwards compatibility
     public const FILE_PDF               = 'application/pdf';
@@ -68,7 +68,7 @@ class MimeType
             case self::IMAGE_WEBP:
                 return self::IMAGE_WEBP;
             default:
-                throw new InvalidArgumentException(sprintf('Invalid MimeType value: %s', $value));
+                throw new InvalidArgumentException(sprintf('Invalid MimeTypeEnum value: %s', $value));
         }
     }
 }

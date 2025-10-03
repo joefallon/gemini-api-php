@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Resources\Parts;
 
-use GeminiAPI\Enums\MimeType;
+use GeminiAPI\Enums\MimeTypeEnum;
 use JsonSerializable;
 
 use function json_encode;

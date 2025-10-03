@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class Role
+class RoleEnum
 {
     public const User  = 'user';
     public const Model = 'model';

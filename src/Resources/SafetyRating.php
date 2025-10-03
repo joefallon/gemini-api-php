@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Resources;
 
-use GeminiAPI\Enums\HarmCategory;
-use GeminiAPI\Enums\HarmProbability;
+use GeminiAPI\Enums\HarmCategoryEnum;
+use GeminiAPI\Enums\HarmProbabilityEnum;
 use JsonSerializable;
 
 class SafetyRating implements JsonSerializable
@@ -35,8 +35,8 @@ class SafetyRating implements JsonSerializable
      */
     public static function fromArray(array $array): self
     {
-        $category = HarmCategory::from($array['category']);
-        $probability = HarmProbability::from($array['probability']);
+        $category = HarmCategoryEnum::from($array['category']);
+        $probability = HarmProbabilityEnum::from($array['probability']);
         $blocked = $array['blocked'] ?? null;
 
         return new self($category, $probability, $blocked);

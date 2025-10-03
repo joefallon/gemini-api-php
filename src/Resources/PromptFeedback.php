@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Resources;
 
-use GeminiAPI\Enums\BlockReason;
+use GeminiAPI\Enums\BlockReasonEnum;
 use GeminiAPI\Traits\ArrayTypeValidator;
 use JsonSerializable;
 
@@ -12,16 +12,16 @@ class PromptFeedback implements JsonSerializable
 {
     use ArrayTypeValidator;
 
-    public ?BlockReason $blockReason;
-    public array        $safetyRatings;
+    public ?BlockReasonEnum $blockReason;
+    public array            $safetyRatings;
 
     /**
-     * @param ?BlockReason   $blockReason
-     * @param SafetyRating[] $safetyRatings
+     * @param ?BlockReasonEnum $blockReason
+     * @param SafetyRating[]   $safetyRatings
      */
     public function __construct(
-        ?BlockReason $blockReason,
-        array        $safetyRatings
+        ?BlockReasonEnum $blockReason,
+        array            $safetyRatings
     ) {
         $this->blockReason = $blockReason;
         $this->safetyRatings = $safetyRatings;
@@ -40,7 +40,7 @@ class PromptFeedback implements JsonSerializable
     {
         $blockReason = null;
         if (isset($array['blockReason']) && $array['blockReason'] !== '') {
-            $blockReason = BlockReason::from($array['blockReason']);
+            $blockReason = BlockReasonEnum::from($array['blockReason']);
         }
         $safetyRatings = array_map(
             static fn(array $rating): SafetyRating => SafetyRating::fromArray($rating),

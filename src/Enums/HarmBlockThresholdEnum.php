@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class HarmBlockThreshold
+class HarmBlockThresholdEnum
 {
     public const HARM_BLOCK_THRESHOLD_UNSPECIFIED = 'HARM_BLOCK_THRESHOLD_UNSPECIFIED';
     public const BLOCK_LOW_AND_ABOVE              = 'BLOCK_LOW_AND_ABOVE';

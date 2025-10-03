@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Tests\Unit\Resources;
 
-use GeminiAPI\Enums\MimeType;
-use GeminiAPI\Enums\Role;
-use GeminiAPI\Enums\MimeType as MimeTypeEnum;
-use GeminiAPI\Enums\Role as RoleEnum;
+use GeminiAPI\Enums\MimeTypeEnum;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\Resources\Content;
 use GeminiAPI\Resources\Parts\FilePart;
 use GeminiAPI\Resources\Parts\ImagePart;
@@ -18,29 +16,29 @@ class ContentTest extends TestCase
 {
     public function testConstructorWithNoContents()
     {
-        $content = new Content([], Role::User);
+        $content = new Content([], RoleEnum::User);
         self::assertInstanceOf(Content::class, $content);
         self::assertEmpty($content->parts);
-        self::assertEquals(Role::User, $content->role);
+        self::assertEquals(RoleEnum::User, $content->role);
     }
 
     public function testConstructorWithContents()
     {
         $content = new Content(
             [new TextPart('this is a text')],
-            Role::User,
+            RoleEnum::User,
         );
         self::assertInstanceOf(Content::class, $content);
         self::assertEquals([new TextPart('this is a text')], $content->parts);
-        self::assertEquals(Role::User, $content->role);
+        self::assertEquals(RoleEnum::User, $content->role);
     }
 
     public function testText()
     {
-        $content = Content::text('this is a text', Role::Model);
+        $content = Content::text('this is a text', RoleEnum::Model);
         self::assertInstanceOf(Content::class, $content);
         self::assertEquals([new TextPart('this is a text')], $content->parts);
-        self::assertEquals(Role::Model, $content->role);
+        self::assertEquals(RoleEnum::Model, $content->role);
     }
 
     public function testTextWithEnumRole()
@@ -54,13 +52,13 @@ class ContentTest extends TestCase
     public function testImage()
     {
         $content = Content::image(
-            MimeType::IMAGE_JPEG,
+            MimeTypeEnum::IMAGE_JPEG,
             'this is an image',
-            Role::Model,
+            RoleEnum::Model,
         );
         self::assertInstanceOf(Content::class, $content);
-        self::assertEquals([new ImagePart(MimeType::IMAGE_JPEG, 'this is an image')], $content->parts);
-        self::assertEquals(Role::Model, $content->role);
+        self::assertEquals([new ImagePart(MimeTypeEnum::IMAGE_JPEG, 'this is an image')], $content->parts);
+        self::assertEquals(RoleEnum::Model, $content->role);
     }
 
     public function testImageWithEnumMimeTypeAndRole()
@@ -78,30 +76,30 @@ class ContentTest extends TestCase
     public function testFile()
     {
         $content = Content::file(
-            MimeType::IMAGE_JPEG,
+            MimeTypeEnum::IMAGE_JPEG,
             'this is a file',
-            Role::Model,
+            RoleEnum::Model,
         );
         self::assertInstanceOf(Content::class, $content);
-        self::assertEquals([new FilePart(MimeType::IMAGE_JPEG, 'this is a file')], $content->parts);
-        self::assertEquals(Role::Model, $content->role);
+        self::assertEquals([new FilePart(MimeTypeEnum::IMAGE_JPEG, 'this is a file')], $content->parts);
+        self::assertEquals(RoleEnum::Model, $content->role);
     }
 
     public function testTextAndImage()
     {
         $content = Content::textAndImage(
             'this is a text',
-            MimeType::IMAGE_JPEG,
+            MimeTypeEnum::IMAGE_JPEG,
             'this is an image',
-            Role::Model,
+            RoleEnum::Model,
         );
         $parts = [
             new TextPart('this is a text'),
-            new ImagePart(MimeType::IMAGE_JPEG, 'this is an image'),
+            new ImagePart(MimeTypeEnum::IMAGE_JPEG, 'this is an image'),
         ];
         self::assertInstanceOf(Content::class, $content);
         self::assertEquals($parts, $content->parts);
-        self::assertEquals(Role::Model, $content->role);
+        self::assertEquals(RoleEnum::Model, $content->role);
     }
 
     public function testTextAndImageWithEnumMimeTypeAndRole()
@@ -125,22 +123,22 @@ class ContentTest extends TestCase
     {
         $content = Content::textAndFile(
             'this is a text',
-            MimeType::IMAGE_JPEG,
+            MimeTypeEnum::IMAGE_JPEG,
             'this is a file',
-            Role::Model,
+            RoleEnum::Model,
         );
         $parts = [
             new TextPart('this is a text'),
-            new FilePart(MimeType::IMAGE_JPEG, 'this is a file'),
+            new FilePart(MimeTypeEnum::IMAGE_JPEG, 'this is a file'),
         ];
         self::assertInstanceOf(Content::class, $content);
         self::assertEquals($parts, $content->parts);
-        self::assertEquals(Role::Model, $content->role);
+        self::assertEquals(RoleEnum::Model, $content->role);
     }
 
     public function testAddText()
     {
-        $content = new Content([], Role::User);
+        $content = new Content([], RoleEnum::User);
         $content->addText('this is a text');
         self::assertEquals([new TextPart('this is a text')], $content->parts);
     }
@@ -154,9 +152,9 @@ class ContentTest extends TestCase
 
     public function testAddImage()
     {
-        $content = new Content([], Role::User);
-        $content->addImage(MimeType::IMAGE_JPEG, 'this is an image');
-        self::assertEquals([new ImagePart(MimeType::IMAGE_JPEG, 'this is an image')], $content->parts);
+        $content = new Content([], RoleEnum::User);
+        $content->addImage(MimeTypeEnum::IMAGE_JPEG, 'this is an image');
+        self::assertEquals([new ImagePart(MimeTypeEnum::IMAGE_JPEG, 'this is an image')], $content->parts);
     }
 
     public function testAddImageWithEnumMimeTypeAndRole()
@@ -170,13 +168,13 @@ class ContentTest extends TestCase
     {
         $content = new Content(
             [new TextPart('this is a text')],
-            Role::User,
+            RoleEnum::User,
         );
         $expected = [
             'parts' => [
                 new TextPart('this is a text'),
             ],
-            'role' => Role::User,
+            'role' => RoleEnum::User,
         ];
         self::assertEquals($expected, $content->jsonSerialize());
     }
@@ -185,7 +183,7 @@ class ContentTest extends TestCase
     {
         $content = new Content(
             [new TextPart('this is a text')],
-            Role::User,
+            RoleEnum::User,
         );
         $expected = '{"parts":[{"text":"this is a text"}],"role":"user"}';
         self::assertEquals($expected, (string) $content);
@@ -199,7 +197,7 @@ class ContentTest extends TestCase
         ]);
         self::assertInstanceOf(Content::class, $content);
         self::assertEmpty($content->parts);
-        self::assertEquals(Role::User, $content->role);
+        self::assertEquals(RoleEnum::User, $content->role);
     }
 
     public function testFromArrayWithParts()
@@ -213,11 +211,11 @@ class ContentTest extends TestCase
         ]);
         $parts = [
             new TextPart('this is a text'),
-            new FilePart(MimeType::IMAGE_JPEG, 'this is an image'),
+            new FilePart(MimeTypeEnum::IMAGE_JPEG, 'this is an image'),
         ];
         self::assertInstanceOf(Content::class, $content);
         self::assertEquals($parts, $content->parts);
-        self::assertEquals(Role::User, $content->role);
+        self::assertEquals(RoleEnum::User, $content->role);
     }
 
     public function testFromArrayWithEnumRole()

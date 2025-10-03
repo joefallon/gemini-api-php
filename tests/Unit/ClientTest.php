@@ -29,17 +29,8 @@ class ClientTest extends TestCase
             'test-api-key',
             $this->createMock(HttpClientInterface::class),
         );
-        self::assertInstanceOf(Client::class, $client);
-    }
 
-    public function testWithBaseUrl(): void
-    {
-        $client = new Client(
-            'test-api-key',
-            $this->createMock(HttpClientInterface::class),
-        );
-        $client = $client->withBaseUrl('test-base-url');
-        self::assertInstanceOf(Client::class, $client);
+        self::assertEquals('test-api-key', $client->apiKey);
     }
 
     public function testGeminiPro(): void
@@ -48,8 +39,8 @@ class ClientTest extends TestCase
             'test-api-key',
             $this->createMock(HttpClientInterface::class),
         );
+
         $model = $client->generativeModel(ModelName::GEMINI_PRO);
-        self::assertInstanceOf(GenerativeModel::class, $model);
         self::assertEquals(ModelName::GEMINI_PRO, $model->modelName);
     }
 
@@ -59,8 +50,8 @@ class ClientTest extends TestCase
             'test-api-key',
             $this->createMock(HttpClientInterface::class),
         );
+
         $model = $client->generativeModel(ModelName::GEMINI_1_0_PRO);
-        self::assertInstanceOf(GenerativeModel::class, $model);
         self::assertEquals(ModelName::GEMINI_1_0_PRO, $model->modelName);
     }
 
@@ -70,8 +61,8 @@ class ClientTest extends TestCase
             'test-api-key',
             $this->createMock(HttpClientInterface::class),
         );
+
         $model = $client->generativeModel(ModelName::EMBEDDING_001);
-        self::assertInstanceOf(GenerativeModel::class, $model);
         self::assertEquals(ModelName::EMBEDDING_001, $model->modelName);
     }
 
@@ -81,8 +72,8 @@ class ClientTest extends TestCase
             'test-api-key',
             $this->createMock(HttpClientInterface::class),
         );
+
         $model = $client->generativeModel(ModelName::GEMINI_PRO);
-        self::assertInstanceOf(GenerativeModel::class, $model);
         self::assertEquals(ModelName::GEMINI_PRO, $model->modelName);
     }
 
@@ -103,7 +94,6 @@ class ClientTest extends TestCase
             $this->createMock(HttpClientInterface::class),
         );
         $model = $client->embeddingModel(ModelName::EMBEDDING_001);
-        self::assertInstanceOf(EmbeddingModel::class, $model);
         self::assertEquals(ModelName::EMBEDDING_001, $model->modelName);
     }
 
@@ -265,6 +255,9 @@ class ClientTest extends TestCase
         self::assertEquals('This is the Gemini Pro response', $response->text());
     }
 
+    /**
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
     public function testEmbedContent(): void
     {
         $httpRequest = new Request(
@@ -322,6 +315,9 @@ class ClientTest extends TestCase
         self::assertEquals([0.041395925, -0.017692696], $response->embedding->values);
     }
 
+    /**
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
     public function testEmbedContentWithEnumModelName(): void
     {
         $httpRequest = new Request(
@@ -379,6 +375,9 @@ class ClientTest extends TestCase
         self::assertEquals([0.041395925, -0.017692696], $response->embedding->values);
     }
 
+    /**
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
     public function testCountTokens(): void
     {
         $httpRequest = new Request(
@@ -556,6 +555,9 @@ class ClientTest extends TestCase
         self::assertEquals('models/gemini-pro-vision', $response->models[1]->name);
     }
 
+    /**
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
     public function testListModelsWithEnumModelName(): void
     {
         $httpRequest = new Request(

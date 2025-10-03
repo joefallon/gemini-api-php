@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace GeminiAPI\Requests;
 
 use BadMethodCallException;
-use GeminiAPI\Enums\ModelName;
-use GeminiAPI\Enums\TaskType;
+use GeminiAPI\Enums\TaskTypeEnum;
 use GeminiAPI\Resources\Content;
+use GeminiAPI\Resources\ModelName;
 use GeminiAPI\Traits\ModelNameToString;
 use JsonSerializable;
 
@@ -26,7 +26,7 @@ class EmbedContentRequest implements JsonSerializable, RequestInterface
     /**
      * @param ModelName|string $modelName
      * @param Content          $content
-     * @param TaskType|null    $taskType
+     * @param string|null      $taskType
      * @param string|null      $title
      */
     public function __construct(
@@ -40,7 +40,7 @@ class EmbedContentRequest implements JsonSerializable, RequestInterface
         $this->taskType = $taskType;
         $this->title = $title;
 
-        if(isset($this->title) && $this->taskType !== TaskType::RETRIEVAL_DOCUMENT)
+        if(isset($this->title) && $this->taskType !== TaskTypeEnum::RETRIEVAL_DOCUMENT)
         {
             throw new BadMethodCallException('Title is only applicable when TaskType is RETRIEVAL_DOCUMENT');
         }
@@ -64,7 +64,7 @@ class EmbedContentRequest implements JsonSerializable, RequestInterface
     /**
      * @return array{
      *     content: Content,
-     *     taskType?: TaskType,
+     *     taskType?: TaskTypeEnum,
      *     title?: string,
      * }
      */

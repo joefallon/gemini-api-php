@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace GeminiAPI\Tests\Unit\Resources;
 
-use GeminiAPI\Enums\FinishReason;
-use GeminiAPI\Enums\HarmBlockThreshold;
-use GeminiAPI\Enums\HarmCategory;
-use GeminiAPI\Enums\HarmProbability;
-use GeminiAPI\Enums\Role;
-use GeminiAPI\Enums\FinishReason as FinishReasonEnum;
-use GeminiAPI\Enums\HarmCategory as HarmCategoryEnum;
-use GeminiAPI\Enums\HarmProbability as HarmProbabilityEnum;
-use GeminiAPI\Enums\Role as RoleEnum;
+use GeminiAPI\Enums\FinishReasonEnum;
+use GeminiAPI\Enums\HarmBlockThresholdEnum;
+use GeminiAPI\Enums\HarmCategoryEnum;
+use GeminiAPI\Enums\HarmProbabilityEnum;
+use GeminiAPI\Enums\RoleEnum;
 use GeminiAPI\Resources\Candidate;
 use GeminiAPI\Resources\CitationMetadata;
 use GeminiAPI\Resources\Content;
@@ -26,8 +22,8 @@ class CandidateTest extends TestCase
     public function testConstructor()
     {
         $candidate = new Candidate(
-            new Content([], Role::User),
-            FinishReason::OTHER,
+            new Content([], RoleEnum::User),
+            FinishReasonEnum::OTHER,
             new CitationMetadata(),
             [],
             1,
@@ -52,18 +48,18 @@ class CandidateTest extends TestCase
     public function testConstructorWithSafetyRatings()
     {
         $candidate = new Candidate(
-            new Content([], Role::User),
-            FinishReason::OTHER,
+            new Content([], RoleEnum::User),
+            FinishReasonEnum::OTHER,
             new CitationMetadata(),
             [
                 new SafetyRating(
-                    HarmCategory::HARM_CATEGORY_MEDICAL,
-                    HarmProbability::HIGH,
+                    HarmCategoryEnum::HARM_CATEGORY_MEDICAL,
+                    HarmProbabilityEnum::HIGH,
                     true,
                 ),
                 new SafetyRating(
-                    HarmCategory::HARM_CATEGORY_DANGEROUS_CONTENT,
-                    HarmProbability::LOW,
+                    HarmCategoryEnum::HARM_CATEGORY_DANGEROUS_CONTENT,
+                    HarmProbabilityEnum::LOW,
                     false,
                 ),
             ],
@@ -102,18 +98,18 @@ class CandidateTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         new Candidate(
-            new Content([], Role::User),
-            FinishReason::OTHER,
+            new Content([], RoleEnum::User),
+            FinishReasonEnum::OTHER,
             new CitationMetadata(),
             [
                 new SafetyRating(
-                    HarmCategory::HARM_CATEGORY_MEDICAL,
-                    HarmProbability::HIGH,
+                    HarmCategoryEnum::HARM_CATEGORY_MEDICAL,
+                    HarmProbabilityEnum::HIGH,
                     false,
                 ),
                 new SafetySetting(
-                    HarmCategory::HARM_CATEGORY_DANGEROUS_CONTENT,
-                    HarmBlockThreshold::BLOCK_LOW_AND_ABOVE,
+                    HarmCategoryEnum::HARM_CATEGORY_DANGEROUS_CONTENT,
+                    HarmBlockThresholdEnum::BLOCK_LOW_AND_ABOVE,
                 ),
             ],
             1,
@@ -159,7 +155,7 @@ class CandidateTest extends TestCase
                                           ]);
 
         self::assertInstanceOf(Candidate::class, $candidate);
-        self::assertEquals(FinishReason::OTHER, $candidate->finishReason);
+        self::assertEquals(FinishReasonEnum::OTHER, $candidate->finishReason);
     }
 
     public function testFromArrayWithEnumFinishReason()
@@ -180,16 +176,16 @@ class CandidateTest extends TestCase
     public function testJsonSerialize()
     {
         $candidate = new Candidate(
-            new Content([], Role::User),
-            FinishReason::OTHER,
+            new Content([], RoleEnum::User),
+            FinishReasonEnum::OTHER,
             new CitationMetadata(),
             [],
             1,
             1,
         );
         $expected = [
-            'content'          => new Content([], Role::User),
-            'finishReason'     => FinishReason::OTHER,
+            'content'          => new Content([], RoleEnum::User),
+            'finishReason'     => FinishReasonEnum::OTHER,
             'citationMetadata' => new CitationMetadata(),
             'safetyRatings'    => [],
             'tokenCount'       => 1,
@@ -201,8 +197,8 @@ class CandidateTest extends TestCase
     public function test__toString()
     {
         $candidate = new Candidate(
-            new Content([], Role::User),
-            FinishReason::OTHER,
+            new Content([], RoleEnum::User),
+            FinishReasonEnum::OTHER,
             new CitationMetadata(),
             [],
             1,
